@@ -12,9 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Setup path
-        run: echo "${{ github.workspace }})/depot_tools" >> $GITHUB_PATH
+        with:
+          submodules: true
 
       - name: Restore v8 Cache
         uses: actions/cache@v2
