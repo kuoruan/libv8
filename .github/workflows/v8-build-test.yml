@@ -33,14 +33,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
 
-      - name: Setup ccache
+      - name: Setup ccache for ${{ matrix.os }}
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt update && sudo apt install ccache
+          sudo apt-get update && sudo apt-get install -yq ccache
           sudo update-ccache-symlinks
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
-      - name: Setup ccache
+      - name: Setup ccache for ${{ matrix.os }}
         if: matrix.os == 'macos-latest'
         run: |
           brew install ccache
@@ -51,6 +51,9 @@ jobs:
 
       - name: Compile v8
         run: sh v8_compile.sh
+
+      - name: Show ccache status
+        run: ccache -s
 
       - name: Test v8
         run: sh v8_test.sh
