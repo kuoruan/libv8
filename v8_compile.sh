@@ -17,3 +17,5 @@ gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
 
 ninja -C "out/release" -j "$processor" v8_monolith
+
+ls -lh out/release/obj/*.a
