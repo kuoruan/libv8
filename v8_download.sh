@@ -1,8 +1,17 @@
 #!/bin/sh
 
-PATH="$(pwd)/depot_tools:$PATH"
+dir="$(pwd)"
+
+PATH="${dir}/depot_tools:$PATH"
 export PATH
 
-branch="${1:-master}"
+version="$(cat "${dir}/VERSION")"
 
-gclient sync --no-history --reset -r "$branch"
+branch="${1:-"$version"}"
+
+test -n "$branch" || exit 1
+
+(
+    set -x
+    gclient sync --no-history --reset -r "$branch"
+)

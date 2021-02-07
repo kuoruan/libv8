@@ -1,17 +1,19 @@
 #!/bin/sh
 
-pwd="$(pwd)"
+dir="$(pwd)"
 
-PATH="${pwd}/depot_tools:$PATH"
+test -d "${dir}/v8" || exit 1
+
+PATH="${dir}/depot_tools:$PATH"
 export PATH
 
-gn_args="$(cat "${pwd}/args.gn")"
+gn_args="$(cat "${dir}/args.gn")"
 
-cd "${pwd}/v8" || exit 1
+cd "${dir}/v8" || exit 1
 
 processor="$(grep -c processor /proc/cpuinfo)"
 
-gn gen "${pwd}/v8/out/x64.release" --args="$gn_args"
-gn args "${pwd}/v8/out/x64.release" --list > "${pwd}/gn_args.txt"
+gn gen "out/release" --args="$gn_args"
+gn args "out/release" --list > "${dir}/gn_args.txt"
 
-ninja -C "${pwd}/v8/out/x64.release" -j "$processor" v8_monolith
+ninja -C "out/release" -j "$processor" v8_monolith
