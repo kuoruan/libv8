@@ -6,6 +6,7 @@ jobs:
   build:
     name: Build v8 for ${{ matrix.platform }}
     strategy:
+      fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
@@ -40,3 +41,10 @@ jobs:
 
       - name: Test v8
         run: sh v8_test.sh
+      
+      - name: Archive v8 library
+        uses: actions/upload-artifact@v2
+        with:
+          name: v8
+          path: libv8_monolith.a
+          retention-days: 7
