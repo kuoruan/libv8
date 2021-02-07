@@ -48,6 +48,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew install ccache
+          echo "CCACHE_CPP2=yes" >> $GITHUB_PATH
+          echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_PATH
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
       - name: Download v8 source
