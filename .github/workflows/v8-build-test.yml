@@ -1,0 +1,40 @@
+name: V8 Build Test
+
+on: push
+
+jobs:
+  build:
+    name: Build v8 for ${{ matrix.platform }}
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Restore v8 Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            v8
+            .gclient_entries
+            .cipd
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+
+      - name: CCache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
+          restore-keys: |
+            ${{ runner.os }}:libv8:ccache:
+
+      - name: Download v8 source
+        run: sh v8_download.sh
+
+      - name: Compile v8
+        run: sh v8_compile.sh
+
+      - name: Test v8
+        run: sh v8_test.sh
