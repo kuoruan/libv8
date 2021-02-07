@@ -27,6 +27,10 @@ esac
 gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
 
-ninja -C "out/release" -j "$cores" v8_monolith
+(
+	set -x
+	ninja -C "out/release" -j "$cores" v8_monolith
+)
+
 
 ls -lh out/release/obj/*.a
