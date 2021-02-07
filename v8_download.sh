@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 dir="$(pwd)"
 
 PATH="${dir}/depot_tools:$PATH"

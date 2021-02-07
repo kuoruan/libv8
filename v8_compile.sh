@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 dir="$(pwd)"
 
 test -d "${dir}/v8" || exit 1
@@ -11,11 +13,20 @@ gn_args="$(cat "${dir}/args.gn")"
 
 cd "${dir}/v8" || exit 1
 
-processor="$(grep -c processor /proc/cpuinfo)"
+cores="2"
+
+case "$(uname -s)" in
+	Linux)
+		cores="$(grep -c processor /proc/cpuinfo)"
+		;;
+	Darwin)
+		cores="$(sysctl -n hw.logicalcpu)"
+		;;
+esac
 
 gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
 
-ninja -C "out/release" -j "$processor" v8_monolith
+ninja -C "out/release" -j "$cores" v8_monolith
 
 ls -lh out/release/obj/*.a
