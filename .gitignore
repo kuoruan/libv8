@@ -2,3 +2,5 @@ v8
 gn_args.txt
 .cipd
 .gclient_entries
+hello_world
+*.a

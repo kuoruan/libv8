@@ -2,18 +2,19 @@
 
 set -e
 
-dir="$(pwd)"
+dir="$(cd "$(dirname "$0")" && pwd)"
 
-test -d "${dir}/v8" || exit 1
+test -d "${dir}/v8"
 
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
 gn_args="$(cat "${dir}/args.gn")"
 
-cd "${dir}/v8" || exit 1
+cd "${dir}/v8"
 
 cores="2"
+is_clang="false"
 
 case "$(uname -s)" in
 	Linux)
@@ -21,8 +22,11 @@ case "$(uname -s)" in
 		;;
 	Darwin)
 		cores="$(sysctl -n hw.logicalcpu)"
+		is_clang="true"
 		;;
 esac
+
+gn_args="$(eval "printf \"$gn_args\" \"$is_clang\"")"
 
 gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
@@ -32,5 +36,6 @@ gn args "out/release" --list > "${dir}/gn_args.txt"
 	ninja -C "out/release" -j "$cores" v8_monolith
 )
 
+ls -lh out/release/obj/libv8_*.a
 
-ls -lh out/release/obj/*.a
+cp -f out/release/obj/libv8_monolith.a "$dir"
