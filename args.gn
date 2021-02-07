@@ -1,3 +1,5 @@
+# https://chromium.googlesource.com/v8/node-ci/+/refs/heads/master/.gn
+
 clang_use_chrome_plugins=false
 is_clang=false
 is_component_build=false
@@ -14,3 +16,4 @@ v8_enable_test_features=false
 v8_monolithic=true
 v8_untrusted_code_mitigations=false
 v8_use_external_startup_data=false
+v8_enable_pointer_compression=true
