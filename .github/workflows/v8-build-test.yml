@@ -4,13 +4,15 @@ on: push
 
 jobs:
   build:
-    env:
-      CCACHE_DIR: ~/.ccache
     name: Build v8 for ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            ccache-path: ~/.ccache
+          - os: macos-latest
+            ccache-path: ~/Library/Caches/ccache
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -30,7 +32,7 @@ jobs:
       - name: Restore CCache
         uses: actions/cache@v2
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: ${{ matrix.ccache-path }}
           key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
