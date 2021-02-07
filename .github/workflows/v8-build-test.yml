@@ -4,12 +4,12 @@ on: push
 
 jobs:
   build:
-    name: Build v8 for ${{ matrix.platform }}
+    name: Build v8 for ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.platform }}
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,6 +33,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
 
+      - name: Setup ccache
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update && sudo apt install ccache
+          sudo update-ccache-symlinks
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
+
+      - name: Setup ccache
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install ccache
+          echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
+
       - name: Download v8 source
         run: sh v8_download.sh
 
@@ -41,10 +54,10 @@ jobs:
 
       - name: Test v8
         run: sh v8_test.sh
-      
+
       - name: Archive v8 library
         uses: actions/upload-artifact@v2
         with:
-          name: v8
+          name: v8_${{ runner.os }}
           path: libv8_monolith.a
           retention-days: 7
