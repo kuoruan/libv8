@@ -9,6 +9,8 @@ test -d "${dir}/v8"
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
+echo "PATH: $PATH"
+
 gn_args="$(cat "${dir}/args.gn")"
 
 cd "${dir}/v8"
