@@ -1,0 +1,89 @@
+name: V8 Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Release v8 for ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ccache-path: ~/.ccache
+            arch: amd64
+          - os: macos-latest
+            ccache-path: ~/Library/Caches/ccache
+            arch: amd64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Restore CCache
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.ccache-path }}
+          key: ${{ runner.os }}:libv8:ccache:release:${{ hashFiles('**/VERSION') }}
+          restore-keys: |
+            ${{ runner.os }}:libv8:ccache:
+
+      - name: Setup ccache for Linux
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          sudo apt-get update && sudo apt-get install -yq ccache
+          sudo update-ccache-symlinks
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
+
+      - name: Setup ccache for macOS
+        if: startsWith(runner.os, 'macOS')
+        run: |
+          brew install ccache
+          echo "CCACHE_CPP2=yes" >> $GITHUB_PATH
+          echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_PATH
+          echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
+
+      - name: Download v8 source
+        run: sh v8_download.sh
+
+      - name: Compile v8
+        run: sh v8_compile.sh
+
+      - name: Archive release
+        id: archive_release
+        run: |
+          filename="v8_${{ runner.os }}_${{ matrix.arch }}"
+
+          tar -C v8 --exclude-vcs -cf "$filename.tar" include/
+          tar -rf "$filename.tar" libv8_monolith.a
+          xz "$filename.tar"
+
+          test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
+
+          echo "::set-output name=archive::$filename.tar.xz"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.archive_release.outputs.archive }}
+          asset_name: ${{ steps.archive_release.outputs.archive }}
+          asset_content_type: application/x-xz
