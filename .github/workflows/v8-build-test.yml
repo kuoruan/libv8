@@ -11,8 +11,10 @@ jobs:
         include:
           - os: ubuntu-latest
             ccache-path: ~/.ccache
+            arch: amd64
           - os: macos-latest
             ccache-path: ~/Library/Caches/ccache
+            arch: amd64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -37,15 +39,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
 
-      - name: Setup ccache for ${{ matrix.os }}
-        if: matrix.os == 'ubuntu-latest'
+      - name: Setup ccache for Linux
+        if: startsWith(runner.os, 'Linux')
         run: |
           sudo apt-get update && sudo apt-get install -yq ccache
           sudo update-ccache-symlinks
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
-      - name: Setup ccache for ${{ matrix.os }}
-        if: matrix.os == 'macos-latest'
+      - name: Setup ccache for macOS
+        if: startsWith(runner.os, 'macOS')
         run: |
           brew install ccache
           echo "CCACHE_CPP2=yes" >> $GITHUB_PATH
@@ -67,6 +69,8 @@ jobs:
       - name: Archive v8 library
         uses: actions/upload-artifact@v2
         with:
-          name: v8_${{ runner.os }}
-          path: libv8_monolith.a
+          name: v8_${{ runner.os }}_${{ matrix.arch }}
+          path: |
+            libv8_monolith.a
+            v8/include/
           retention-days: 7
