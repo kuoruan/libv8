@@ -60,7 +60,7 @@ jobs:
       - name: Get release URL
         id: get_release
         run: |
-          url="$(cat "release_url/release_url.txt")"
+          url="$(cat release_url.txt)"
           echo "::set-output name=upload_url::$url"
 
       - name: Restore CCache
