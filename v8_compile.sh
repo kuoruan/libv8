@@ -9,14 +9,9 @@ test -d "${dir}/v8"
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
-echo "PATH: $PATH"
-
-gn_args="$(cat "${dir}/args.gn")"
-
-cd "${dir}/v8"
-
 cores="2"
 is_clang="false"
+cc_wrapper=""
 
 case "$(uname -s)" in
 	Linux)
@@ -28,7 +23,15 @@ case "$(uname -s)" in
 		;;
 esac
 
-gn_args="$(eval "printf \"$gn_args\" \"$is_clang\"")"
+if command -v ccache >/dev/null 2>&1 ; then
+    cc_wrapper="ccache"
+fi
+
+gn_args="$(grep -v "^#" "${dir}/args.gn" | grep -v "^$")
+is_clang=$is_clang
+cc_wrapper=\"$cc_wrapper\""
+
+cd "${dir}/v8"
 
 gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
