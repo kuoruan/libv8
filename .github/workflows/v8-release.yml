@@ -59,7 +59,7 @@ jobs:
         run: |
           filename="v8_${{ runner.os }}_${{ matrix.arch }}"
 
-          tar -C v8 --exclude-vcs -cf "$filename.tar" include/
+          tar -C v8 -cf "$filename.tar" include/
           tar -rf "$filename.tar" libv8_monolith.a
           xz "$filename.tar"
 
@@ -67,7 +67,7 @@ jobs:
 
           echo "::set-output name=archive::$filename.tar.xz"
 
-      - name: Create Release
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -78,7 +78,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
