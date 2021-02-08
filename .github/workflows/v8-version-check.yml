@@ -2,7 +2,7 @@ name: V8 Version Check
 
 on:
   schedule:
-    - cron: '0 9 * * *' # every day at 9:00AM
+    - cron: '0 1 * * *' # every day at UTC 1:00AM
   workflow_dispatch:
 
 jobs:
@@ -44,5 +44,3 @@ jobs:
           body: |
             Auto-generated to bump v8 version.
             New version: ${{ env.NEW_V8_VERSION }}
-         
-          
