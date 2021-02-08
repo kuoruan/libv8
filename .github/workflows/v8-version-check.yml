@@ -32,15 +32,15 @@ jobs:
           fi
 
       - name: Make pull request
-        if: ${{ env.NEW_V8_VERSION }} != '0'
+        if: env.NEW_V8_VERSION != '0'
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: v8
-          branch-suffix: ${{ env.NEW_V8_VERSION }}
+          branch-suffix: timestamp
           delete-branch: true
-          commit-message: "chore(v8): bump to ${{ env.NEW_V8_VERSION }}"
-          title: "Bump v8 version to ${{ env.NEW_V8_VERSION }}"
+          commit-message: 'chore(v8): bump to ${{ env.NEW_V8_VERSION }}'
+          title: 'Bump v8 version to ${{ env.NEW_V8_VERSION }}'
           body: |
             Auto-generated to bump v8 version.
             New version: ${{ env.NEW_V8_VERSION }}
