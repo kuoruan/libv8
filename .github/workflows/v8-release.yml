@@ -70,7 +70,6 @@ jobs:
           path: ${{ matrix.ccache-path }}
           key: ${{ runner.os }}:libv8:ccache:release:${{ hashFiles('**/VERSION') }}
           restore-keys: |
-            ${{ runner.os }}:libv8:ccache:release:
             ${{ runner.os }}:libv8:ccache:
 
       - name: Setup CCache for Linux
