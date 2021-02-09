@@ -7,10 +7,10 @@ on:
 
 jobs:
   release:
-    name: Create new release
+    name: Create New Release
     runs-on: ubuntu-latest
     steps:
-      - name: Create release
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -21,11 +21,11 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Output release URL file
+      - name: Output Release URL File
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
- 
-      - name: Save release URL file for publish
+
+      - name: Save Release URL File for Publish
         uses: actions/upload-artifact@v2
         with:
           name: release_url
@@ -33,7 +33,7 @@ jobs:
           retention-days: 1
 
   publish:
-    name: Publish v8 for ${{ matrix.os }}
+    name: Publish V8 for ${{ matrix.os }}
     needs: [release]
     strategy:
       fail-fast: false
@@ -47,17 +47,18 @@ jobs:
             arch: amd64
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
         with:
           submodules: true
+          fetch-depth: 1
 
-      - name: Download release URL file
+      - name: Download Release URL File
         uses: actions/download-artifact@v2
         with:
           name: release_url
 
-      - name: Get release URL
+      - name: Get Release URL
         id: get_release
         run: |
           url="$(cat release_url.txt)"
@@ -72,14 +73,14 @@ jobs:
             ${{ runner.os }}:libv8:ccache:release:
             ${{ runner.os }}:libv8:ccache:
 
-      - name: Setup ccache for Linux
+      - name: Setup CCache for Linux
         if: startsWith(runner.os, 'Linux')
         run: |
           sudo apt-get update && sudo apt-get install -yq ccache
           sudo update-ccache-symlinks
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
-      - name: Setup ccache for macOS
+      - name: Setup CCache for macOS
         if: startsWith(runner.os, 'macOS')
         run: |
           brew install ccache
@@ -87,13 +88,13 @@ jobs:
           echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_PATH
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
-      - name: Download v8 source
+      - name: Download V8 Source
         run: sh v8_download.sh
 
-      - name: Compile v8
+      - name: Compile V8
         run: sh v8_compile.sh
 
-      - name: Archive release
+      - name: Archive Release
         id: archive_release
         run: |
           filename="v8_${{ runner.os }}_${{ matrix.arch }}"
@@ -106,7 +107,7 @@ jobs:
 
           echo "::set-output name=archive::$filename.tar.xz"
 
-      - name: Upload release asset
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

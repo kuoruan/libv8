@@ -2,32 +2,35 @@ name: V8 Version Check
 
 on:
   schedule:
-    - cron: '0 1 * * *' # every day at UTC 1:00AM
+    - cron: "0 1 * * *" # every day at UTC 1:00AM
   workflow_dispatch:
 
 jobs:
   check:
-    name: Check v8 version
+    name: Check V8 Version
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Get lastest stable version
+      - name: Get Lastest Stable Version
         run: |
+          current_version="$(cat VERSION)"
           latest_version="$(wget -qO- https://omahaproxy.appspot.com/all.json | \
             jq -r '.[] | select(.os == "linux") | .versions | .[] | select(.channel == "stable") | .v8_version')"
-          current_version="$(cat VERSION)"
-          
+
+          echo "Current version: $current_version"
+          echo "Latest version: $latest_version"
+
           if [ -n "$latest_version" ] && [ x"$latest_version" != x"$current_version" ] ; then
             echo "$latest_version\n" > VERSION
-            
+
             echo "NEW_V8_VERSION=$latest_version" >> $GITHUB_ENV
           else
             echo "NEW_V8_VERSION=0" >> $GITHUB_ENV
           fi
 
-      - name: Make pull request
+      - name: Make Pull Request
         if: env.NEW_V8_VERSION != '0'
         uses: peter-evans/create-pull-request@v3
         with:
@@ -35,8 +38,8 @@ jobs:
           branch: v8
           branch-suffix: timestamp
           delete-branch: true
-          commit-message: 'chore(v8): bump to ${{ env.NEW_V8_VERSION }}'
-          title: 'Bump v8 version to ${{ env.NEW_V8_VERSION }}'
+          commit-message: "chore(v8): bump to ${{ env.NEW_V8_VERSION }}"
+          title: "Bump v8 version to ${{ env.NEW_V8_VERSION }}"
           body: |
             Auto-generated to bump v8 version.
             New version: ${{ env.NEW_V8_VERSION }}

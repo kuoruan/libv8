@@ -1,10 +1,15 @@
 name: V8 Build Test
 
-on: push
+on:
+  push:
+    paths-ignore:
+      - "depot_tools"
+      - ".gitignore"
+      - ".gitpod*"
 
 jobs:
   build:
-    name: Build v8 for ${{ matrix.os }}
+    name: Build V8 for ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -17,12 +22,12 @@ jobs:
             arch: amd64
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
         with:
           submodules: true
 
-      - name: Restore v8 Cache
+      - name: Restore V8 Cache
         uses: actions/cache@v2
         with:
           path: |
@@ -39,14 +44,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
 
-      - name: Setup ccache for Linux
+      - name: Setup CCache for Linux
         if: startsWith(runner.os, 'Linux')
         run: |
           sudo apt-get update && sudo apt-get install -yq ccache
           sudo update-ccache-symlinks
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
-      - name: Setup ccache for macOS
+      - name: Setup CCache for macOS
         if: startsWith(runner.os, 'macOS')
         run: |
           brew install ccache
@@ -54,19 +59,19 @@ jobs:
           echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_PATH
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
-      - name: Download v8 source
+      - name: Download V8 Source
         run: sh v8_download.sh
 
-      - name: Compile v8
+      - name: Compile V8
         run: sh v8_compile.sh
 
-      - name: Show ccache status
+      - name: Show CCache Status
         run: ccache -s
 
       - name: Test v8
         run: sh v8_test.sh
 
-      - name: Archive v8 library
+      - name: Archive V8 Library
         uses: actions/upload-artifact@v2
         with:
           name: v8_${{ runner.os }}_${{ matrix.arch }}
