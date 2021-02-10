@@ -83,8 +83,8 @@ jobs:
         if: startsWith(runner.os, 'macOS')
         run: |
           brew install ccache
-          echo "CCACHE_CPP2=yes" >> $GITHUB_PATH
-          echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_PATH
+          echo "CCACHE_CPP2=yes" >> $GITHUB_ENV
+          echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_ENV
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
       - name: Download V8 Source
