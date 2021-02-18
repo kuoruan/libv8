@@ -23,23 +23,21 @@ jobs:
           echo "Latest version: $latest_version"
 
           if [ -n "$latest_version" ] && [ x"$latest_version" != x"$current_version" ] ; then
-            echo "$latest_version\n" > VERSION
-
             echo "NEW_V8_VERSION=$latest_version" >> $GITHUB_ENV
           else
             echo "NEW_V8_VERSION=0" >> $GITHUB_ENV
           fi
 
-      - name: Make Pull Request
+      - name: Make Commit
         if: env.NEW_V8_VERSION != '0'
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: v8
-          branch-suffix: timestamp
-          delete-branch: true
-          commit-message: "chore(v8): bump to ${{ env.NEW_V8_VERSION }}"
-          title: "Bump v8 version to ${{ env.NEW_V8_VERSION }}"
-          body: |
-            Auto-generated to bump v8 version.
-            New version: ${{ env.NEW_V8_VERSION }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          echo "${{ env.NEW_V8_VERSION }}" > VERSION
+
+          git add -f VERSION
+          git commit -am "chore(v8): bump to v${{ env.NEW_V8_VERSION }}"
+
+          git tag -a "v${{ env.NEW_V8_VERSION }}" -m "v${{ env.NEW_V8_VERSION }}"
+          git push --follow-tags
