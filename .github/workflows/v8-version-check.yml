@@ -38,6 +38,7 @@ jobs:
 
           git add -f VERSION
           git commit -am "chore(v8): bump to v${{ env.NEW_V8_VERSION }}"
+          git push origin master
 
           git tag -a "v${{ env.NEW_V8_VERSION }}" -m "v${{ env.NEW_V8_VERSION }}"
-          git push --follow-tags
+          git push --tags
