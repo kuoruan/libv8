@@ -6,6 +6,8 @@ on:
       - "depot_tools"
       - ".gitignore"
       - ".gitpod*"
+    tags-ignore:
+      - "*"
 
 jobs:
   build:
