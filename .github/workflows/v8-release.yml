@@ -7,34 +7,7 @@ on:
 
 jobs:
   release:
-    name: Create New Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Output Release URL File
-        run: |
-          echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-
-      - name: Save Release URL File for Publish
-        uses: actions/upload-artifact@v2
-        with:
-          name: release_url
-          path: release_url.txt
-          retention-days: 1
-
-  publish:
-    name: Publish V8 for ${{ matrix.os }}
-    needs: [release]
+    name: Release V8 for ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -48,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
           fetch-depth: 1
@@ -62,10 +35,10 @@ jobs:
         id: get_release
         run: |
           url="$(cat release_url.txt)"
-          echo "::set-output name=upload_url::$url"
+          echo "upload_url=$url" >> $GITHUB_OUTPUT
 
       - name: Restore CCache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ matrix.ccache-path }}
           key: ${{ runner.os }}:libv8:ccache:release:${{ hashFiles('**/VERSION') }}
@@ -104,14 +77,14 @@ jobs:
 
           test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
 
-          echo "::set-output name=archive::$filename.tar.xz"
+          echo "archive=${filename}.tar.xz" >> $GITHUB_OUTPUT
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Archive
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ${{ steps.archive_release.outputs.archive }}
-          asset_name: ${{ steps.archive_release.outputs.archive }}
-          asset_content_type: application/x-xz
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ steps.archive_release.outputs.archive }}
