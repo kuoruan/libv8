@@ -1,6 +1,8 @@
-v8
-gn_args.txt
 .cipd
 .gclient_entries
-hello_world
+.gclient_previous_sync_commits
+gn_args.txt
+v8
+
 *.a
+hello_world
