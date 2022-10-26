@@ -33,7 +33,7 @@ cc_wrapper=\"$cc_wrapper\""
 
 cd "${dir}/v8"
 
-gn gen "out/release" "--args=$gn_args"
+gn gen "out/release" --args="$gn_args"
 gn args "out/release" --list > "${dir}/gn_args.txt"
 
 (
