@@ -5,6 +5,7 @@ if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
 
 $Env:Path += ";$PSScriptRoot\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0
+$Env:vs2022_install = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
 
 $cores = ( Get-CimInstance -ClassName Win32_Processor ).NumberOfLogicalProcessors
 
