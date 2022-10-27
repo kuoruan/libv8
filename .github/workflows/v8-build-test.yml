@@ -152,6 +152,19 @@ jobs:
       - name: Install SCCache
         run: scoop install sccache
 
+      # https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/
+      - name: Install Windows 10 SDK 20348
+        run: |
+          Invoke-WebRequest -Method Get `
+           -Uri https://go.microsoft.com/fwlink/?linkid=2164145 `
+           -OutFile winsdksetup.exe `
+           -UseBasicParsing
+          Start-Process -Wait winsdksetup.exe `
+            -ArgumentList `
+              "/q", "/norestart", "/features", `
+              "OptionId.WindowsDesktopSoftwareDevelopmentKit", `
+              "OptionId.NetFxSoftwareDevelopmentKit"
+
       - name: Download V8 Source
         run: .\v8_download.ps1
 
