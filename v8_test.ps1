@@ -3,7 +3,7 @@ if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
     Exit 1
 }
 
-g++ -I"${dir}\v8" -I"${dir}\v8\include" \
+g++.exe -I"${dir}\v8" -I"${dir}\v8\include" \
     "${dir}\v8\samples\hello-world.cc" -o hello_world.exe \
     -lv8_monolith -L"$dir" -L"${dir}\v8\out\release\obj" \
     -pthread -std=c++17 -ldl -DV8_COMPRESS_POINTERS

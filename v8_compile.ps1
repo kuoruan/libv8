@@ -5,7 +5,6 @@ if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
 
 $Env:Path += ";$PSScriptRoot\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0
-$Env:vs2022_install = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
 
 $cores = ( Get-CimInstance -ClassName Win32_Processor ).NumberOfLogicalProcessors
 
@@ -28,7 +27,7 @@ cd "$PSScriptRoot\v8"
 gn gen "out\release" --args="$gnArgs"
 gn args "out\release" --list | Out-File -FilePath "${dir}\gn_args.txt"
 
-ninja -C "out\release" -j "$cores" v8_monolith
+ninja.exe -C "out\release" -j "$cores" v8_monolith
 
 Get-ChildItem -Path .\out\release\obj\libv8_*.a | Where-Object {
     -not $_.PSIsContainer
