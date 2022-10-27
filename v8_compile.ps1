@@ -12,9 +12,14 @@ $gnArgs = Get-Content "$PSScriptRoot\args.gn" | Where-Object {
     -not ( [String]::IsNullOrEmpty($_.Trim()) -or ( $_ -match "^#" ) )
 }
 
+$ccWrapper=""
+if ( Get-Command -Name sccache ) {
+    cc_wrapper="sccache"
+}
+
 $gnArgs +=@'
 is_clang=false
-cc_wrapper="sccache"
+cc_wrapper="$ccWrapper"
 '@
 
 cd "$PSScriptRoot\v8"
