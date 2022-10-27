@@ -125,8 +125,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}:libv8:sccache:
 
-      - name: Setup SCCache
+      - name: Setup Scoop
         uses: MinoruSekine/setup-scoop@v1
+
+      - name: Install SCCache
         run: scoop install sccache
 
       - name: Download V8 Source
