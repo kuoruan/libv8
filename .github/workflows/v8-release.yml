@@ -59,7 +59,7 @@ jobs:
 
   build-linux:
     name: Release V8 for Linux
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -161,7 +161,7 @@ jobs:
           path: ${{ steps.archive_release.outputs.archive }}
 
   release:
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v3
