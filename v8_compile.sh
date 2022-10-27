@@ -4,7 +4,10 @@ set -e
 
 dir="$(cd "$(dirname "$0")" && pwd)"
 
-test -d "${dir}/v8"
+if [ ! -d "${dir}/v8" ]; then
+	echo "v8 not found"
+	exit 1
+fi
 
 PATH="${dir}/depot_tools:$PATH"
 export PATH
