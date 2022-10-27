@@ -25,7 +25,7 @@ cc_wrapper="$ccWrapper"
 cd "$PSScriptRoot\v8"
 
 gn gen "out\release" --args="$gnArgs"
-gn args "out\release" --list | Out-File -FilePath "${dir}\gn_args.txt"
+gn args "out\release" --list | Tee-Object -FilePath "${dir}\gn_args-$Env:OS.txt"
 
 ninja.exe -C "out\release" -j "$cores" v8_monolith
 
