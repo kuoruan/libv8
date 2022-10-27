@@ -22,6 +22,7 @@ jobs:
           path: |
             v8
             .gclient_entries
+            .gclient_previous_sync_commits
             .cipd
           key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
 
@@ -82,6 +83,7 @@ jobs:
           path: |
             v8
             .gclient_entries
+            .gclient_previous_sync_commits
             .cipd
           key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
 
@@ -141,6 +143,7 @@ jobs:
           path: |
             v8
             .gclient_entries
+            .gclient_previous_sync_commits
             .cipd
           key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
 
@@ -153,7 +156,7 @@ jobs:
             ${{ runner.os }}:libv8:sccache:
 
       - name: Setup Scoop
-        uses: MinoruSekine/setup-scoop@v1
+        uses: MinoruSekine/setup-scoop@main
 
       - name: Install SCCache
         run: scoop install sccache
