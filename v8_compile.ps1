@@ -14,7 +14,7 @@ $gnArgs = Get-Content "$PSScriptRoot\args.gn" | Where-Object {
 
 $ccWrapper=""
 if ( Get-Command -Name sccache ) {
-    cc_wrapper="sccache"
+    $ccWrapper="sccache"
 }
 
 $gnArgs +=@'
