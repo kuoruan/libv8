@@ -16,6 +16,15 @@ jobs:
           submodules: true
           fetch-depth: 1
 
+      - name: Restore V8 Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            v8
+            .gclient_entries
+            .cipd
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+
       - name: Restore CCache
         uses: actions/cache@v3
         with:
@@ -67,6 +76,15 @@ jobs:
           submodules: true
           fetch-depth: 1
 
+      - name: Restore V8 Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            v8
+            .gclient_entries
+            .cipd
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+
       - name: Restore CCache
         uses: actions/cache@v3
         with:
@@ -116,6 +134,15 @@ jobs:
         with:
           submodules: true
           fetch-depth: 1
+
+      - name: Restore V8 Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            v8
+            .gclient_entries
+            .cipd
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
 
       - name: Restore SCCache
         uses: actions/cache@v3

@@ -10,19 +10,9 @@ on:
       - "*"
 
 jobs:
-  build:
-    name: Build V8 for ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            ccache-path: ~/.ccache
-            arch: amd64
-          - os: macos-latest
-            ccache-path: ~/Library/Caches/ccache
-            arch: amd64
-    runs-on: ${{ matrix.os }}
+  build-mac:
+    name: Build V8 for macOS
+    runs-on: macos-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -41,20 +31,12 @@ jobs:
       - name: Restore CCache
         uses: actions/cache@v3
         with:
-          path: ${{ matrix.ccache-path }}
+          path: ~/Library/Caches/ccache
           key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
           restore-keys: |
             ${{ runner.os }}:libv8:ccache:
 
-      - name: Setup CCache for Linux
-        if: startsWith(runner.os, 'Linux')
-        run: |
-          sudo apt-get update && sudo apt-get install -yq ccache
-          sudo update-ccache-symlinks
-          echo "/usr/lib/ccache" >> $GITHUB_PATH
-
       - name: Setup CCache for macOS
-        if: startsWith(runner.os, 'macOS')
         run: |
           brew install ccache
           echo "CCACHE_CPP2=yes" >> $GITHUB_ENV
@@ -76,7 +58,60 @@ jobs:
       - name: Archive V8 Library
         uses: actions/upload-artifact@v3
         with:
-          name: v8_${{ runner.os }}_${{ matrix.arch }}
+          name: v8_${{ runner.os }}_amd64
+          path: |
+            libv8_monolith.a
+            v8/include/
+          retention-days: 7
+
+  build-linux:
+    name: Build V8 for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Restore V8 Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            v8
+            .gclient_entries
+            .cipd
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+
+      - name: Restore CCache
+        uses: actions/cache@v3
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
+          restore-keys: |
+            ${{ runner.os }}:libv8:ccache:
+
+      - name: Setup CCache for Linux
+        run: |
+          sudo apt-get update && sudo apt-get install -yq ccache
+          sudo update-ccache-symlinks
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
+
+      - name: Download V8 Source
+        run: sh v8_download.sh
+
+      - name: Compile V8
+        run: sh v8_compile.sh
+
+      - name: Show CCache Status
+        run: ccache -s
+
+      - name: Test v8
+        run: sh v8_test.sh
+
+      - name: Archive V8 Library
+        uses: actions/upload-artifact@v3
+        with:
+          name: v8_${{ runner.os }}_amd64
           path: |
             libv8_monolith.a
             v8/include/
