@@ -2,12 +2,12 @@ name: V8 Build Test
 
 on:
   push:
+    branches:
+      - master
     paths-ignore:
       - "depot_tools"
       - ".gitignore"
       - ".gitpod*"
-    tags-ignore:
-      - "*"
 
 jobs:
   build-mac:
