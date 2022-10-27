@@ -159,27 +159,25 @@ jobs:
         run: scoop install sccache
 
       - name: Download V8 Source
-        shell: pwsh
         run: .\v8_download.ps1
 
       - name: Compile V8
-        shell: pwsh
         run: .\v8_compile.ps1
 
       - name: Archive Release
         id: archive_release
-        shell: sh
+        shell: pwsh
         run: |
           $filename="v8_${{ runner.os }}_amd64"
 
-          tar -C v8 -cf "$filename.tar" include/
-          tar -rf "$filename.tar" libv8_monolith.a
-          xz "$filename.tar"
+          7z a ".\$filename.7z" .\include libv8_monolith.a
 
-          test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
+          Get-ChildItem -Path ".\$filename.7z" | Where-Object {
+            -not $_.PSIsContainer
+          } | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
 
-          echo "filename=$filename" >> $GITHUB_OUTPUT
-          echo "archive=${filename}.tar.xz" >> $GITHUB_OUTPUT
+          "filename=$filename" >> $Env:GITHUB_ENV
+          "archive=${filename}.7z" >> $Env:GITHUB_ENV
 
       - name: Upload Archive
         uses: actions/upload-artifact@v3
@@ -201,4 +199,6 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: "*.tar.xz"
+          files: |
+            *.tar.xz
+            *.7z
