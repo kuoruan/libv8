@@ -1,6 +1,8 @@
 $ErrorActionPreference = "Stop"
 
-Test-Path -Path "$PSScriptRoot\v8"
+if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
+    Write-Error "v8 not found"
+}
 
 $Env:Path += ";$PSScriptRoot\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0
