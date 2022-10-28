@@ -30,9 +30,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/Library/Caches/ccache
-          key: ${{ runner.os }}:libv8:ccache:release:${{ hashFiles('**/VERSION') }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:ccache:
+          key: ${{ runner.os }}:libv8:ccache
 
       - name: Setup CCache
         run: |
@@ -91,9 +89,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: ${{ runner.os }}:libv8:ccache:release:${{ hashFiles('**/VERSION') }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:ccache:
+          key: ${{ runner.os }}:libv8:ccache
 
       - name: Setup CCache
         run: |
@@ -151,9 +147,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.LOCALAPPDATA }}\Mozilla\sccache
-          key: ${{ runner.os }}:libv8:sccache:release:${{ hashFiles('**/VERSION') }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:sccache:
+          key: ${{ runner.os }}:libv8:sccache
 
       - name: Setup Scoop
         uses: MinoruSekine/setup-scoop@main

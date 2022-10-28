@@ -15,13 +15,14 @@ $gnArgs = Get-Content "$PSScriptRoot\args\$os.gn" | Where-Object {
 }
 
 $ccWrapper=""
+
 if ( Get-Command -Name sccache ) {
     $ccWrapper="sccache"
 }
 
-$gnArgs +=@'
+$gnArgs += @"
 cc_wrapper="$ccWrapper"
-'@
+"@
 
 cd "$PSScriptRoot\v8"
 
