@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-mac:
-    name: Release V8 for macOS
+    name: Build for macOS
     runs-on: macos-latest
     steps:
       - name: Checkout Code
@@ -66,7 +66,7 @@ jobs:
           path: ${{ steps.archive_release.outputs.archive }}
 
   build-linux:
-    name: Release V8 for Linux
+    name: Build for Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -124,7 +124,7 @@ jobs:
           path: ${{ steps.archive_release.outputs.archive }}
 
   build-windows:
-    name: Release V8 for Windows
+    name: Build for Windows
     runs-on: windows-latest
     steps:
       - name: Checkout Code
