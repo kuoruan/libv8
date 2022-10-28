@@ -1,7 +1,3 @@
-# https://chromium.googlesource.com/v8/node-ci/+/refs/heads/master/.gn
-# https://v8.dev/docs/compile-arm64
-# https://v8.dev/docs/cross-compile-ios
-
 clang_use_chrome_plugins=false
 is_component_build=false
 is_debug=false
@@ -9,11 +5,10 @@ strip_debug_info=true
 symbol_level=0
 treat_warnings_as_errors=false
 use_custom_libcxx=false
-# use_sysroot=false
-# v8_embedder_string="-v8go"
 v8_enable_gdbjit=false
 v8_enable_i18n_support=false
 v8_enable_pointer_compression=true
 v8_enable_test_features=false
 v8_monolithic=true
+v8_symbol_level=0
 v8_use_external_startup_data=false

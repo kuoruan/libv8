@@ -63,6 +63,7 @@ jobs:
           path: |
             libv8_monolith.a
             v8/include/
+            gn-args_${{ runner.os }}.txt
           retention-days: 7
 
   build-linux:
@@ -117,6 +118,7 @@ jobs:
           path: |
             libv8_monolith.a
             v8/include/
+            gn-args_${{ runner.os }}.txt
           retention-days: 7
 
   build-windows:
@@ -152,19 +154,6 @@ jobs:
       - name: Install SCCache
         run: scoop install sccache
 
-      # https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/
-      - name: Install Windows 10 SDK 20348
-        run: |
-          Invoke-WebRequest -Method Get `
-           -Uri https://go.microsoft.com/fwlink/?linkid=2164145 `
-           -OutFile winsdksetup.exe `
-           -UseBasicParsing
-          Start-Process -Wait winsdksetup.exe `
-            -ArgumentList `
-              "/q", "/norestart", "/features", `
-              "OptionId.WindowsDesktopSoftwareDevelopmentKit", `
-              "OptionId.NetFxSoftwareDevelopmentKit"
-
       - name: Download V8 Source
         run: .\v8_download.ps1
 
@@ -182,6 +171,7 @@ jobs:
         with:
           name: v8_${{ runner.os }}_amd64
           path: |
-            libv8_monolith.a
+            v8_monolith.lib
             v8/include/
+            gn-args_${{ runner.os }}.txt
           retention-days: 7

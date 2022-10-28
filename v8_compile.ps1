@@ -6,9 +6,11 @@ if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
 $Env:Path += ";$PSScriptRoot\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0
 
+$os = "Windows"
+
 $cores = ( Get-CimInstance -ClassName Win32_Processor ).NumberOfLogicalProcessors
 
-$gnArgs = Get-Content "$PSScriptRoot\args.gn" | Where-Object {
+$gnArgs = Get-Content "$PSScriptRoot\args\$os.gn" | Where-Object {
     -not ( [String]::IsNullOrEmpty($_.Trim()) -or ( $_ -match "^#" ) )
 }
 
@@ -18,19 +20,21 @@ if ( Get-Command -Name sccache ) {
 }
 
 $gnArgs +=@'
-is_clang=false
 cc_wrapper="$ccWrapper"
 '@
 
 cd "$PSScriptRoot\v8"
 
 gn gen "out\release" --args="$gnArgs"
-gn args "out\release" --list | Tee-Object -FilePath "${dir}\gn_args-$Env:OS.txt"
+
+Write-Output "==================== Build args start ===================="
+gn args "out\release" --list | Tee-Object -FilePath "$PSScriptRoot\gn-args_$os.txt"
+Write-Output "==================== Build args end ===================="
 
 ninja.exe -C "out\release" -j "$cores" v8_monolith
 
-Get-ChildItem -Path .\out\release\obj\libv8_*.a | Where-Object {
+Get-ChildItem -Path .\out\release\obj\v8_*.lib | Where-Object {
     -not $_.PSIsContainer
 } | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
 
-Copy-Item -Path ".\out\release\obj\libv8_monolith.a" -Destination "$PSScriptRoot"
+Copy-Item -Path ".\out\release\obj\v8_monolith.lib" -Destination "$PSScriptRoot"

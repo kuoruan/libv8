@@ -12,32 +12,39 @@ fi
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
+os=""
+
 cores="2"
-is_clang="false"
 cc_wrapper=""
 
 case "$(uname -s)" in
 	Linux)
 		cores="$(grep -c processor /proc/cpuinfo)"
+		os="Linux"
 		;;
 	Darwin)
 		cores="$(sysctl -n hw.logicalcpu)"
-		is_clang="true"
+		os="macOS"
 		;;
+	*)
+		echo "Unknown OS type"
+		exit 1
 esac
 
 if command -v ccache >/dev/null 2>&1 ; then
     cc_wrapper="ccache"
 fi
 
-gn_args="$(grep -v "^#" "${dir}/args.gn" | grep -v "^$")
-is_clang=$is_clang
+gn_args="$(grep -v "^#" "${dir}/args/$os.gn" | grep -v "^$")
 cc_wrapper=\"$cc_wrapper\""
 
 cd "${dir}/v8"
 
 gn gen "out/release" --args="$gn_args"
-gn args "out/release" --list | tee "${dir}/gn_args-$(uname -s).txt"
+
+echo "==================== Build args start ===================="
+gn args "out/release" --list | tee "${dir}/gn-args_${os}.txt"
+echo "==================== Build args end ===================="
 
 (
 	set -x

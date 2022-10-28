@@ -53,7 +53,7 @@ jobs:
           filename="v8_${{ runner.os }}_amd64"
 
           tar -C v8 -cf "$filename.tar" include/
-          tar -rf "$filename.tar" libv8_monolith.a
+          tar -rf "$filename.tar" libv8_monolith.a gn-args_${{ runner.os }}.txt
           xz "$filename.tar"
 
           test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
@@ -113,7 +113,7 @@ jobs:
           filename="v8_${{ runner.os }}_amd64"
 
           tar -C v8 -cf "$filename.tar" include/
-          tar -rf "$filename.tar" libv8_monolith.a
+          tar -rf "$filename.tar" libv8_monolith.a gn-args_${{ runner.os }}.txt
           xz "$filename.tar"
 
           test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
@@ -161,19 +161,6 @@ jobs:
       - name: Install SCCache
         run: scoop install sccache
 
-      # https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/
-      - name: Install Windows 10 SDK 20348
-        run: |
-          Invoke-WebRequest -Method Get `
-           -Uri https://go.microsoft.com/fwlink/?linkid=2164145 `
-           -OutFile winsdksetup.exe `
-           -UseBasicParsing
-          Start-Process -Wait winsdksetup.exe `
-            -ArgumentList `
-              "/q", "/norestart", "/features", `
-              "OptionId.WindowsDesktopSoftwareDevelopmentKit", `
-              "OptionId.NetFxSoftwareDevelopmentKit"
-
       - name: Download V8 Source
         run: .\v8_download.ps1
 
@@ -186,7 +173,7 @@ jobs:
         run: |
           $filename="v8_${{ runner.os }}_amd64"
 
-          7z a ".\$filename.7z" .\include libv8_monolith.a
+          7z a ".\$filename.7z" .\include v8_monolith.lib gn-args_${{ runner.os }}.txt
 
           Get-ChildItem -Path ".\$filename.7z" | Where-Object {
             -not $_.PSIsContainer
@@ -203,6 +190,8 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [build-mac, build-linux, build-windows]
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v3
