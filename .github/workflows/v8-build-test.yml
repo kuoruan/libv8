@@ -43,16 +43,17 @@ jobs:
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
       - name: Download V8 Source
-        run: sh v8_download.sh
+        run: ./v8_download.sh
 
       - name: Compile V8
-        run: sh v8_compile.sh
+        run: ./v8_compile.sh
 
       - name: Show CCache Status
         run: ccache -s
 
       - name: Test V8
-        run: sh v8_test.sh
+        continue-on-error: true
+        run: ./v8_test.sh
 
       - name: Archive V8 Library
         uses: actions/upload-artifact@v3
@@ -96,16 +97,17 @@ jobs:
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
       - name: Download V8 Source
-        run: sh v8_download.sh
+        run: ./v8_download.sh
 
       - name: Compile V8
-        run: sh v8_compile.sh
+        run: ./v8_compile.sh
 
       - name: Show CCache Status
         run: ccache -s
 
       - name: Test V8
-        run: sh v8_test.sh
+        continue-on-error: true
+        run: ./v8_test.sh
 
       - name: Archive V8 Library
         uses: actions/upload-artifact@v3
@@ -154,10 +156,11 @@ jobs:
       - name: Compile V8
         run: .\v8_compile.ps1
 
-      - name: Show CCache Status
+      - name: Show SCCache Status
         run: sccache --show-stats
 
       - name: Test V8
+        continue-on-error: true
         run: .\v8_test.ps1
 
       - name: Archive V8 Library

@@ -7,7 +7,7 @@ dir="$(cd "$(dirname "$0")" && pwd)"
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
-version="$(cat "${dir}/VERSION")"
+version="$(head -n1 "${dir}/VERSION")"
 
 branch="${1:-"$version"}"
 

@@ -52,5 +52,3 @@ echo "==================== Build args end ===================="
 )
 
 ls -lh out/release/obj/libv8_*.a
-
-cp -f out/release/obj/libv8_monolith.a "$dir"

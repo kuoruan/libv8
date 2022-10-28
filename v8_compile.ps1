@@ -23,7 +23,7 @@ $gnArgs += @"
 cc_wrapper=\"$ccWrapper\"
 "@
 
-cd "$PSScriptRoot\v8"
+Set-Location "$PSScriptRoot\v8"
 
 gn gen "out\release" --args="$gnArgs"
 
@@ -36,5 +36,3 @@ ninja.exe -C "out\release" -j "$cores" v8_monolith
 Get-ChildItem -Path .\out\release\obj\v8_*.lib | Where-Object {
     -not $_.PSIsContainer
 } | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
-
-Copy-Item -Path ".\out\release\obj\v8_monolith.lib" -Destination "$PSScriptRoot"

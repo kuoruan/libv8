@@ -40,29 +40,18 @@ jobs:
           echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
 
       - name: Download V8 Source
-        run: sh v8_download.sh
+        run: ./v8_download.sh
 
       - name: Compile V8
-        run: sh v8_compile.sh
+        run: ./v8_compile.sh
 
       - name: Archive Release
         id: archive_release
-        run: |
-          filename="v8_${{ runner.os }}_amd64"
-
-          tar -C v8 -cf "$filename.tar" include/
-          tar -rf "$filename.tar" libv8_monolith.a gn-args_${{ runner.os }}.txt
-          xz "$filename.tar"
-
-          test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
-
-          echo "filename=$filename" >> $GITHUB_OUTPUT
-          echo "archive=${filename}.tar.xz" >> $GITHUB_OUTPUT
+        run: ./archive.sh
 
       - name: Upload Archive
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.archive_release.outputs.filename }}
           path: ${{ steps.archive_release.outputs.archive }}
 
   build-linux:
@@ -98,29 +87,18 @@ jobs:
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
       - name: Download V8 Source
-        run: sh v8_download.sh
+        run: ./v8_download.sh
 
       - name: Compile V8
-        run: sh v8_compile.sh
+        run: ./v8_compile.sh
 
       - name: Archive Release
         id: archive_release
-        run: |
-          filename="v8_${{ runner.os }}_amd64"
-
-          tar -C v8 -cf "$filename.tar" include/
-          tar -rf "$filename.tar" libv8_monolith.a gn-args_${{ runner.os }}.txt
-          xz "$filename.tar"
-
-          test -f "$filename.tar.xz" && ls -lh "$filename.tar.xz"
-
-          echo "filename=$filename" >> $GITHUB_OUTPUT
-          echo "archive=${filename}.tar.xz" >> $GITHUB_OUTPUT
+        run: ./archive.sh
 
       - name: Upload Archive
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.archive_release.outputs.filename }}
           path: ${{ steps.archive_release.outputs.archive }}
 
   build-windows:
@@ -164,22 +142,11 @@ jobs:
       - name: Archive Release
         id: archive_release
         shell: pwsh
-        run: |
-          $filename="v8_${{ runner.os }}_amd64"
-
-          7z a ".\$filename.7z" .\include v8_monolith.lib gn-args_${{ runner.os }}.txt
-
-          Get-ChildItem -Path ".\$filename.7z" | Where-Object {
-            -not $_.PSIsContainer
-          } | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
-
-          "filename=$filename" >> $Env:GITHUB_ENV
-          "archive=${filename}.7z" >> $Env:GITHUB_ENV
+        run: .\archive.ps1
 
       - name: Upload Archive
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.archive_release.outputs.filename }}
           path: ${{ steps.archive_release.outputs.archive }}
 
   release:
@@ -194,7 +161,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
