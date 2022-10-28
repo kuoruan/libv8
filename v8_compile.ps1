@@ -1,7 +1,6 @@
-if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
-    Write-Error "v8 not found"
-    Exit 1
-}
+$ErrorActionPreference = "Stop"
+
+Test-Path -Path "$PSScriptRoot\v8"
 
 $Env:Path += ";$PSScriptRoot\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0
@@ -21,7 +20,7 @@ if ( Get-Command -Name sccache ) {
 }
 
 $gnArgs += @"
-cc_wrapper="$ccWrapper"
+cc_wrapper=\"$ccWrapper\"
 "@
 
 cd "$PSScriptRoot\v8"

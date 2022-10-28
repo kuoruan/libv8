@@ -1,7 +1,6 @@
-if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
-    Write-Error "v8 not found"
-    Exit 1
-}
+$ErrorActionPreference = "Stop"
+
+Test-Path -Path "$PSScriptRoot\v8"
 
 g++.exe -I"${dir}\v8" -I"${dir}\v8\include" \
     "${dir}\v8\samples\hello-world.cc" -o hello_world.exe \
