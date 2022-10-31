@@ -151,7 +151,9 @@ jobs:
             ${{ runner.os }}:libv8:sccache:
 
       - name: Setup Scoop
-        uses: MinoruSekine/setup-scoop@main
+        uses: ScoopInstaller/GithubActions@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install SCCache
         run: scoop install sccache
