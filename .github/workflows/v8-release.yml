@@ -131,9 +131,14 @@ jobs:
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v3
+        with:
+          path: .
+
+      - name: Display Downloads
+        run: ls -lhR
 
       - name: Upload Archive
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@master
         with:
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref_name }}
