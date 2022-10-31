@@ -35,7 +35,7 @@ if command -v ccache >/dev/null 2>&1 ; then
     cc_wrapper="ccache"
 fi
 
-gn_args="$(grep -v "^#" "${dir}/args/$os.gn" | grep -v "^$")
+gn_args="$(grep -v "^#" "${dir}/args/$os.gn" | grep -v "^$" | sed 's/"/\\"/g')
 cc_wrapper=\"$cc_wrapper\""
 
 cd "${dir}/v8"
@@ -43,7 +43,7 @@ cd "${dir}/v8"
 gn gen "out/release" --args="$gn_args"
 
 echo "==================== Build args start ===================="
-gn args "out/release" --list | tee "${dir}/gn-args_${os}.txt"
+n args "out/release" --list | tee "${dir}/gn-args_${os}.txt"
 echo "==================== Build args end ===================="
 
 (
