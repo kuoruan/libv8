@@ -131,11 +131,9 @@ jobs:
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v3
-        with:
-          path: .
 
       - name: Display Downloads
-        run: ls -lhR
+        run: ls -lhR artifact
 
       - name: Upload Archive
         uses: softprops/action-gh-release@master
@@ -146,5 +144,5 @@ jobs:
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            *.tar.xz
-            *.7z
+            artifact/*.tar.xz
+            artifact/*.7z

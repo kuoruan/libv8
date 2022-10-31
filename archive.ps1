@@ -19,4 +19,4 @@ Get-ChildItem -Path "$Env:GITHUB_WORKSPACE`\$archive" | `
   Where-Object { -not $_.PSIsContainer } | `
   Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
 
-"archive=$archive" >> $Env:GITHUB_ENV
+"archive=$archive" >> $Env:GITHUB_OUTPUT
