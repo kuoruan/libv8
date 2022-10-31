@@ -15,8 +15,8 @@ Set-Location "$outputDir"
 
 7z a -r "$Env:GITHUB_WORKSPACE`\$archive" .
 
-Get-ChildItem -Path "$Env:GITHUB_WORKSPACE`\$archive" | Where-Object {
-  -not $_.PSIsContainer
-} | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
+Get-ChildItem -Path "$Env:GITHUB_WORKSPACE`\$archive" | `
+  Where-Object { -not $_.PSIsContainer } | `
+  Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
 
 "archive=$archive" >> $Env:GITHUB_ENV

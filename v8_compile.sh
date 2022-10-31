@@ -35,7 +35,7 @@ if command -v ccache >/dev/null 2>&1 ; then
     cc_wrapper="ccache"
 fi
 
-gn_args="$(grep -v "^#" "${dir}/args/$os.gn" | grep -v "^$" | sed 's/"/\\"/g')
+gn_args="$(grep -v "^#" "${dir}/args/$os.gn" | grep -v "^$")
 cc_wrapper=\"$cc_wrapper\""
 
 cd "${dir}/v8"

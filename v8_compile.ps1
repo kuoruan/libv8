@@ -15,14 +15,14 @@ $gnArgs = Get-Content "$PSScriptRoot\args\$os.gn" | `
     Where-Object { -not ( [String]::IsNullOrEmpty($_.Trim()) -or ( $_ -match "^#" ) ) } | `
     Foreach-Object { $_ -replace '"','\"' }
 
-$ccWrapper=""
+$ccWrapper = ""
 
 if ( Get-Command -Name sccache ) {
     $ccWrapper = "sccache"
 }
 
 $gnArgs += @"
-cc_wrapper="$ccWrapper"
+cc_wrapper=\"$ccWrapper\"
 "@
 
 Set-Location "$PSScriptRoot\v8"
@@ -35,6 +35,6 @@ Write-Output "==================== Build args end ===================="
 
 ninja.exe -C "out\release" -j "$cores" v8_monolith
 
-Get-ChildItem -Path .\out\release\obj\v8_*.lib | Where-Object {
-    -not $_.PSIsContainer
-} | Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}
+Get-ChildItem -Path .\out\release\obj\v8_*.lib | `
+    Where-Object { -not $_.PSIsContainer } | `
+    Select-Object -Property Name, CreationTime, @{Name='Size(MB)'; Expression={[math]::round($_.Length / 1MB, 2)}}

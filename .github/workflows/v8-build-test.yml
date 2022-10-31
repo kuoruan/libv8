@@ -165,10 +165,6 @@ jobs:
       - name: Show SCCache Status
         run: sccache --show-stats
 
-      - name: Test V8
-        continue-on-error: true
-        run: .\v8_test.ps1
-
       - name: Archive V8 Library
         uses: actions/upload-artifact@v3
         with:
