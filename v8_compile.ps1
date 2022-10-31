@@ -12,8 +12,7 @@ $os = "Windows"
 $cores = ( Get-CimInstance -ClassName Win32_Processor ).NumberOfLogicalProcessors
 
 $gnArgs = Get-Content "$PSScriptRoot\args\$os.gn" | `
-    Where-Object { -not ( [String]::IsNullOrEmpty($_.Trim()) -or ( $_ -match "^#" ) ) } | `
-    Foreach-Object { $_ -replace '"','\"' }
+    Where-Object { -not ( [String]::IsNullOrEmpty($_.Trim()) -or ( $_ -match "^#" ) ) }
 
 $ccWrapper = ""
 
@@ -22,7 +21,7 @@ if ( Get-Command -Name sccache ) {
 }
 
 $gnArgs += @"
-cc_wrapper=\"$ccWrapper\"
+cc_wrapper="$ccWrapper"
 "@
 
 Set-Location "$PSScriptRoot\v8"

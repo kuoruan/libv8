@@ -43,7 +43,7 @@ cd "${dir}/v8"
 gn gen "out/release" --args="$gn_args"
 
 echo "==================== Build args start ===================="
-n args "out/release" --list | tee "${dir}/gn-args_${os}.txt"
+gn args "out/release" --list | tee "${dir}/gn-args_${os}.txt"
 echo "==================== Build args end ===================="
 
 (
