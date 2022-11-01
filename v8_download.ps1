@@ -1,6 +1,6 @@
 Param( [string]$branch )
 
-$ErrorActionPreference = "Stop"
+$Global:$ErrorActionPreference = "Stop"
 
 $Env:Path += ";$PSScriptRoot`\depot_tools"
 $Env:DEPOT_TOOLS_WIN_TOOLCHAIN = 0

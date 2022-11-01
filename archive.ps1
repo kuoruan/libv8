@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+$Global:$ErrorActionPreference = "Stop"
 
 $outputDir = "$Env:GITHUB_WORKSPACE`/pack"
 
