@@ -1,4 +1,4 @@
-$Global:$ErrorActionPreference = "Stop"
+$Global:ErrorActionPreference = "Stop"
 
 if ( -not ( Test-Path -Path "$PSScriptRoot\v8" ) ) {
     Write-Error "v8 not found"
