@@ -14,7 +14,7 @@ fi
 	g++ -I"${dir}/v8" -I"${dir}/v8/include" \
 		"${dir}/v8/samples/hello-world.cc" -o hello_world \
 		-lv8_monolith -L"${dir}/v8/out/release/obj/" \
-		-pthread -std=c++17 -ldl -DV8_COMPRESS_POINTERS
+		-pthread -std=c++17 -ldl
 )
 
 sh -c "./hello_world"
