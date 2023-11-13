@@ -33,7 +33,7 @@ Write-Output "==================== Build args start ===================="
 gn args "out\release" --list | Tee-Object -FilePath "$PSScriptRoot\gn-args_$os.txt"
 Write-Output "==================== Build args end ===================="
 
-ninja.exe -C "out\release" -j "$cores" v8_monolith
+ninja.bat -C "out\release" -j "$cores" v8_monolith
 
 Get-ChildItem -Path .\out\release\obj\v8_*.lib | `
     Where-Object { -not $_.PSIsContainer } | `
