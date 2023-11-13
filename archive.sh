@@ -4,7 +4,7 @@ set -e
 
 output_dir="${GITHUB_WORKSPACE}/pack"
 
-archive="v8_${RUNNER_OS}_amd64.tar.xz"
+archive="${1:-v8_${RUNNER_OS}_amd64}.tar.xz"
 
 mkdir "$output_dir"
 

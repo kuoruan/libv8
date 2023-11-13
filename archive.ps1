@@ -1,8 +1,14 @@
+Param( [string]$archiveName )
+
 $Global:ErrorActionPreference = "Stop"
 
 $outputDir = "$Env:GITHUB_WORKSPACE`/pack"
 
-$archive = "v8_$Env:RUNNER_OS`_amd64.7z"
+if ( [string]::IsNullOrEmpty($archiveName) ) {
+  $archive = "v8_$Env:RUNNER_OS`_amd64.7z"
+} else {
+  $archive = "$archiveName`.7z"
+}
 
 New-Item -ItemType "directory" -Path "$outputDir"
 

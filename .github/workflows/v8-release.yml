@@ -6,9 +6,12 @@ on:
       - "v*"
 
 jobs:
-  build-mac:
-    name: Build for macOS
-    runs-on: macos-latest
+  build:
+    name: Build V8
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,136 +28,36 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Restore CCache
-        uses: actions/cache@v3
+      - name: Build Release for Linux
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: ./.github/actions/build-linux
         with:
-          path: ~/Library/Caches/ccache
-          key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:ccache:
+          archive-name: v8_${{ runner.os }}_amd64
 
-      - name: Setup CCache
-        run: |
-          brew install ccache
-          echo "CCACHE_CPP2=yes" >> $GITHUB_ENV
-          echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_ENV
-          echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
+      - name: Build Release for macOS
+        if: startsWith(matrix.os, 'macos')
+        uses: ./.github/actions/build-macos
+        with:
+          archive-name: v8_${{ runner.os }}_amd64
 
-      - name: Download V8 Source
-        run: ./v8_download.sh
-
-      - name: Compile V8
-        run: ./v8_compile.sh
-
-      - name: Archive Release
-        id: archive_release
-        run: ./archive.sh
+      - name: Build Release for Windows
+        if: startsWith(matrix.os, 'windows')
+        uses: ./.github/actions/build-windows
+        with:
+          archive-name: v8_${{ runner.os }}_amd64
 
       - name: Upload Archive
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ steps.archive_release.outputs.archive }}
-
-  build-linux:
-    name: Build for Linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 1
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-          cache: 'pip'
-
-      - name: Install Python Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Restore CCache
-        uses: actions/cache@v3
-        with:
-          path: ~/.ccache
-          key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:ccache:
-
-      - name: Setup CCache
-        run: |
-          sudo apt-get update && sudo apt-get install -yq ccache
-          sudo update-ccache-symlinks
-          echo "/usr/lib/ccache" >> $GITHUB_PATH
-
-      - name: Download V8 Source
-        run: ./v8_download.sh
-
-      - name: Compile V8
-        run: ./v8_compile.sh
-
-      - name: Archive Release
-        id: archive_release
-        run: ./archive.sh
-
-      - name: Upload Archive
-        uses: actions/upload-artifact@v3
-        with:
-          path: ${{ steps.archive_release.outputs.archive }}
-
-  build-windows:
-    name: Build for Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 1
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-          cache: 'pip'
-
-      - name: Install Python Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Restore SCCache
-        uses: actions/cache@v3
-        with:
-          path: C:\Users\runneradmin\AppData\Local\Mozilla\sccache
-          key: ${{ runner.os }}:libv8:sccache:${{ github.run_number }}
-          restore-keys: |
-            ${{ runner.os }}:libv8:sccache:
-
-      - name: Setup Scoop
-        uses: MinoruSekine/setup-scoop@main
-
-      - name: Install SCCache
-        run: scoop install sccache
-
-      - name: Download V8 Source
-        run: .\v8_download.ps1
-
-      - name: Compile V8
-        run: .\v8_compile.ps1
-
-      - name: Archive Release
-        id: archive_release
-        run: .\archive.ps1
-
-      - name: Upload Archive
-        uses: actions/upload-artifact@v3
-        with:
-          path: ${{ steps.archive_release.outputs.archive }}
+          path: |
+            *.tar.xz
+            *.7z
+          retention-days: 7
 
   release:
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [build-mac, build-linux, build-windows]
+    needs: build
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v3

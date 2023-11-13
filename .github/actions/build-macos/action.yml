@@ -1,0 +1,52 @@
+name: Build for macOS
+description: 'Build V8 for macOS'
+
+inputs:
+  archive-name:
+    description: 'Base name of the archive to create'
+    default: v8_macOS
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Restore CCache
+      uses: actions/cache@v3
+      with:
+        path: .ccache
+        key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
+        restore-keys: |
+          ${{ runner.os }}:libv8:ccache:
+
+    - name: Setup CCache for macOS
+      shell: bash
+      run: |
+        brew install ccache
+        echo "$(brew --prefix ccache)/libexec" >> $GITHUB_PATH
+        echo "CCACHE_CPP2=yes" >> $GITHUB_ENV
+        echo "CCACHE_SLOPPINESS=time_macros" >> $GITHUB_ENV
+
+        mkdir -p "${GITHUB_WORKSPACE}/.ccache"
+        echo "CCACHE_DIR=${GITHUB_WORKSPACE}/.ccache" >> $GITHUB_ENV
+
+    - name: Download V8 Source
+      shell: bash
+      run: ./v8_download.sh
+
+    - name: Compile V8
+      shell: bash
+      run: ./v8_compile.sh
+
+    - name: Show CCache Status
+      shell: bash
+      run: ccache -s
+
+    - name: Test V8
+      continue-on-error: true
+      shell: bash
+      run: ./v8_test.sh
+
+    - name: Archive V8
+      shell: bash
+      run: ./archive.sh ${{ inputs.archive-name }}
