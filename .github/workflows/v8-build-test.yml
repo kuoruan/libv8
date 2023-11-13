@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - split
+      - actions
     paths-ignore:
       - "depot_tools"
       - ".gitignore"
