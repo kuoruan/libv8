@@ -16,6 +16,15 @@ jobs:
           submodules: true
           fetch-depth: 1
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
       - name: Restore CCache
         uses: actions/cache@v3
         with:
@@ -56,6 +65,15 @@ jobs:
           submodules: true
           fetch-depth: 1
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
       - name: Restore CCache
         uses: actions/cache@v3
         with:
@@ -94,6 +112,15 @@ jobs:
         with:
           submodules: true
           fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
 
       - name: Restore SCCache
         uses: actions/cache@v3

@@ -18,6 +18,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8' # https://chromium.googlesource.com/chromium/tools/depot_tools.git/+/refs/heads/main
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
 
       - name: Restore V8 Cache
         uses: actions/cache@v3
@@ -75,6 +85,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
 
       - name: Restore V8 Cache
         uses: actions/cache@v3
@@ -131,6 +151,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
 
       - name: Restore V8 Cache
         uses: actions/cache@v3
