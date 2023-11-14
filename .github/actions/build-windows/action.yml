@@ -27,8 +27,10 @@ runs:
       run: |
         scoop install sccache
 
-        mkdir -p "$Env:GITHUB_WORKSPACE`\.sccache"
-        echo "SCCACHE_DIR=$Env:GITHUB_WORKSPACE`\.sccache" >> $Env:GITHUB_ENV
+        $sccacheDir = "$Env:GITHUB_WORKSPACE`\.sccache"
+        New-Item -Path "$sccacheDir" -ItemType Directory -Force
+
+        echo "SCCACHE_DIR=$sccacheDir" >> $Env:GITHUB_ENV
 
     - name: Download V8 Source
       shell: pwsh
