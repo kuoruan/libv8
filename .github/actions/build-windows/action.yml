@@ -23,22 +23,24 @@ runs:
       uses: MinoruSekine/setup-scoop@main
 
     - name: Setup SCCache
-      shell: pwsh
+      shell: cmd
       run: |
         scoop install sccache
 
-        $sccacheDir = "$Env:GITHUB_WORKSPACE`\.sccache"
-        New-Item -Path "$sccacheDir" -ItemType Directory -Force
+        set "sccacheDir=%GITHUB_WORKSPACE%\.sccache"
+        if not exist "%sccacheDir%" (
+          mkdir "%sccacheDir%"
+        )
 
-        echo "SCCACHE_DIR=$sccacheDir" >> $Env:GITHUB_ENV
+        echo SCCACHE_DIR="%sccacheDir%" >> %GITHUB_ENV%
 
     - name: Download V8 Source
-      shell: pwsh
-      run: .\v8_download.ps1
+      shell: cmd
+      run: .\v8_download.bat
 
     - name: Compile V8
-      shell: pwsh
-      run: .\v8_compile.ps1
+      shell: cmd
+      run: .\v8_compile.bat
 
     - name: Show SCCache Status
       shell: pwsh
@@ -54,4 +56,4 @@ runs:
 
     - name: Archive V8
       shell: pwsh
-      run: .\archive.ps1 ${{ inputs.archive-name }}
+      run: .\archive.bat ${{ inputs.archive-name }}

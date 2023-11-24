@@ -2,19 +2,19 @@
 
 set -e
 
-output_dir="${GITHUB_WORKSPACE}/pack"
+dir="$(cd "$(dirname "$0")" && pwd)"
+
+output_dir="${dir}/pack"
 
 archive="${1:-v8_${RUNNER_OS}_amd64}.tar.xz"
 
-mkdir "$output_dir"
+mkdir "$output_dir" || true
 
-cp -r "${GITHUB_WORKSPACE}/v8/include" \
-  "${GITHUB_WORKSPACE}/v8/out/release/obj/libv8_monolith.a" \
-  "${GITHUB_WORKSPACE}/gn-args_${RUNNER_OS}.txt" \
+cp -r "${dir}/v8/include" \
+  "${dir}/v8/out/release/obj/libv8_monolith.a" \
+  "${dir}/gn-args_${RUNNER_OS}.txt" \
   "$output_dir"
 
-tar -Jcf "${GITHUB_WORKSPACE}/${archive}" -C "$output_dir" .
+tar -Jcf "${dir}/${archive}" -C "$output_dir" .
 
-ls -lh "${GITHUB_WORKSPACE}/${archive}"
-
-echo "archive=$archive" >> $GITHUB_OUTPUT
+ls -lh "${dir}/${archive}"
