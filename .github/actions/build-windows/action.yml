@@ -44,6 +44,14 @@ runs:
       shell: pwsh
       run: sccache --show-stats
 
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Test V8
+      continue-on-error: true
+      shell: cmd
+      run: .\v8_test.bat
+
     - name: Archive V8
       shell: pwsh
       run: .\archive.ps1 ${{ inputs.archive-name }}

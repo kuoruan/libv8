@@ -21,6 +21,7 @@
 ├── v8_compile.sh     # Compile V8 library for Linux and macOS
 ├── v8_download.ps1   # Download V8 source code for Windows
 ├── v8_download.sh    # Download V8 source code for Linux and macOS
+├── v8_test.bat       # Test V8 library for Windows
 └── v8_test.sh        # Test V8 library for Linux and macOS
 ```
 
