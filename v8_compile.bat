@@ -63,7 +63,7 @@ if errorlevel 1 (
 )
 
 for /r ".\out\release\obj" %%F in (v8_*.lib) do (
-  set /A "sizeMB=%%~zF/1024/1024"
+  set /A sizeMB=%%~zF/1024/1024
   echo Name: %%~nxF Size^(MB^): %sizeMB%
 )
 

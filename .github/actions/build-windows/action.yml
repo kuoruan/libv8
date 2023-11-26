@@ -32,7 +32,7 @@ runs:
           mkdir "%sccacheDir%"
         )
 
-        echo SCCACHE_DIR="%sccacheDir%" >> %GITHUB_ENV%
+        echo SCCACHE_DIR=%sccacheDir% >> "%GITHUB_ENV%"
 
     - name: Download V8 Source
       shell: cmd

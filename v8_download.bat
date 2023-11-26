@@ -19,6 +19,11 @@ if "%branch%"=="" (
 
 :next
 
+if "%branch%"=="" (
+  echo Failed to get branch.
+  exit /b 1
+)
+
 call gclient sync --no-history --reset -r "%branch%"
 if errorlevel 1 (
   echo Failed to sync branch.

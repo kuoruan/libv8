@@ -22,9 +22,9 @@ if not exist "%outputDir%" (
   mkdir "%outputDir%"
 )
 
-xcopy /E /I /Y "%dir%\v8\include" "%outputDir%"
-xcopy /E /I /Y "%dir%\v8\out\release\obj\v8_monolith.lib" "%outputDir%"
-xcopy /E /I /Y "%dir%\gn-args_%os%.txt" "%outputDir%"
+xcopy /E /I /Q /Y "%dir%\v8\include" "%outputDir%"
+xcopy /E /I /Q /Y "%dir%\v8\out\release\obj\v8_monolith.lib" "%outputDir%"
+xcopy /E /I /Q /Y "%dir%\gn-args_%os%.txt" "%outputDir%"
 
 where 7z >nul 2>nul
 if errorlevel 1 (
@@ -43,7 +43,7 @@ if errorlevel 1 (
 popd
 
 for %%F in ("%dir%\%archive%") do (
-  set /A "sizeMB=%%~zF/1024/1024"
+  set /A sizeMB=%%~zF/1024/1024
   echo Name: %%~nxF Size^(MB^): %SizeMB%
 )
 

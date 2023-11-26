@@ -26,12 +26,12 @@ runs:
         sudo apt-get install -yq ccache
         sudo update-ccache-symlinks
 
-        echo "/usr/lib/ccache" >> $GITHUB_PATH
+        echo "/usr/lib/ccache" >> "$GITHUB_PATH"
 
         ccacheDir="${GITHUB_WORKSPACE}/.ccache"
         test -d "$ccacheDir" || mkdir "$ccacheDir"
 
-        echo "CCACHE_DIR=$ccacheDir" >> $GITHUB_ENV
+        echo "CCACHE_DIR=$ccacheDir" >> "$GITHUB_ENV"
 
     - name: Download V8 Source
       shell: bash
