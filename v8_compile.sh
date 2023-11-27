@@ -12,25 +12,33 @@ fi
 PATH="${dir}/depot_tools:$PATH"
 export PATH
 
-os=""
+export DEPOT_TOOLS_UPDATE=0
+
+os="$RUNNER_OS"
+
+if [ -z "$os" ]; then
+	case "$(uname -s)" in
+		Linux)
+			os="Linux"
+			;;
+		Darwin)
+			os="macOS"
+			;;
+		*)
+			echo "Unknown OS type"
+			exit 1
+	esac
+fi
 
 cores="2"
+
+if [ "$os" = "Linux" ]; then
+	cores="$(grep -c processor /proc/cpuinfo)"
+elif [ "$os" = "macOS" ]; then
+	cores="$(sysctl -n hw.logicalcpu)"
+fi
+
 cc_wrapper=""
-
-case "$(uname -s)" in
-	Linux)
-		cores="$(grep -c processor /proc/cpuinfo)"
-		os="Linux"
-		;;
-	Darwin)
-		cores="$(sysctl -n hw.logicalcpu)"
-		os="macOS"
-		;;
-	*)
-		echo "Unknown OS type"
-		exit 1
-esac
-
 if command -v ccache >/dev/null 2>&1 ; then
   cc_wrapper="ccache"
 fi

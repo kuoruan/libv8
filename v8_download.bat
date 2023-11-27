@@ -7,6 +7,7 @@ set "branch=%~1"
 
 set "Path=%dir%\depot_tools;%Path%"
 set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+set "DEPOT_TOOLS_UPDATE=0"
 
 if "%branch%"=="" (
   for /F "usebackq delims=" %%i in ("%dir%\VERSION") do (
@@ -24,7 +25,7 @@ if "%branch%"=="" (
   exit /b 1
 )
 
-call gclient sync --no-history --reset -r "%branch%"
+call gclient sync --no-history --reset -r "%branch%" --force --with_branch_heads
 if errorlevel 1 (
   echo Failed to sync branch.
   exit /b %errorlevel%

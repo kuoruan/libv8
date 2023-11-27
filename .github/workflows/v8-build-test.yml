@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - actions
+      - build-*
     paths-ignore:
       - "depot_tools"
       - ".gitignore"
@@ -15,7 +16,7 @@ jobs:
     name: Build V8
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-11, windows-2019]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
@@ -23,15 +24,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 1
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8' # https://chromium.googlesource.com/chromium/tools/depot_tools.git/+/refs/heads/main/README.md
-          cache: 'pip' # caching pip dependencies
-
-      - name: Install Python Dependencies
-        run: pip install -r requirements.txt
 
       - name: Restore V8 Cache
         uses: actions/cache@v3

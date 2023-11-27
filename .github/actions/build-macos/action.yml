@@ -19,10 +19,15 @@ runs:
         restore-keys: |
           ${{ runner.os }}:libv8:ccache:
 
-    - name: Setup CCache for macOS
+    - name: Setup Python 2.7
+      uses: MatteoH2O1999/setup-python@v2
+      with:
+        python-version: '2.7'
+
+    - name: Setup Build Tools
       shell: bash
       run: |
-        brew install ccache
+        brew install ninja ccache
 
         echo "$(brew --prefix ccache)/libexec" >> "$GITHUB_PATH"
         echo "CCACHE_CPP2=yes" >> "$GITHUB_ENV"
@@ -39,6 +44,8 @@ runs:
 
     - name: Compile V8
       shell: bash
+      env:
+        DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
       run: ./v8_compile.sh
 
     - name: Show CCache Status

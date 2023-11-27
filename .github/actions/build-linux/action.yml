@@ -19,11 +19,16 @@ runs:
         restore-keys: |
           ${{ runner.os }}:libv8:ccache:
 
-    - name: Setup CCache for Linux
+    - name: Setup Python 2.7
+      uses: MatteoH2O1999/setup-python@v2
+      with:
+        python-version: '2.7'
+
+    - name: Setup Build Tools
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install -yq ccache
+        sudo apt-get install -yq ninja-build ccache
         sudo update-ccache-symlinks
 
         echo "/usr/lib/ccache" >> "$GITHUB_PATH"
