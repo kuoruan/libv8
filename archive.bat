@@ -42,9 +42,6 @@ if errorlevel 1 (
 
 popd
 
-for %%F in ("%dir%\%archive%") do (
-  set /A sizeMB=%%~zF/1024/1024
-  echo Name: %%~nxF Size^(MB^): %SizeMB%
-)
+dir "%dir%\%archive%"
 
 endlocal

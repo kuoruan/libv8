@@ -41,8 +41,6 @@ if not errorlevel 1 (
 
 set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"""
 
-echo %gnArgs%
-
 pushd "%dir%\v8"
 
 call gn gen ".\out\release" --args="%gnArgs%"
@@ -62,10 +60,7 @@ if errorlevel 1 (
   exit /b %errorlevel%
 )
 
-for /r ".\out\release\obj" %%F in (v8_*.lib) do (
-  set /A sizeMB=%%~zF/1024/1024
-  echo Name: %%~nxF Size^(MB^): %sizeMB%
-)
+dir ".\out\release\obj\v8_*.lib"
 
 popd
 
