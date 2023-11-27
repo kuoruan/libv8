@@ -10,16 +10,16 @@
 ```
 .
 ├── VERSION           # Current V8 version
-├── archive.ps1       # Archive V8 library for Windows
+├── archive.bat       # Archive V8 library for Windows
 ├── archive.sh        # Archive V8 library for Linux and macOS
 ├── args
 │   ├── Linux.gn      # GN args for Linux
 │   ├── Windows.gn    # GN args for Windows
 │   └── macOS.gn      # GN args for macOS
 ├── requirements.txt  # Python requirements
-├── v8_compile.ps1    # Compile V8 library for Windows
+├── v8_compile.bat    # Compile V8 library for Windows
 ├── v8_compile.sh     # Compile V8 library for Linux and macOS
-├── v8_download.ps1   # Download V8 source code for Windows
+├── v8_download.bat   # Download V8 source code for Windows
 ├── v8_download.sh    # Download V8 source code for Linux and macOS
 ├── v8_test.bat       # Test V8 library for Windows
 └── v8_test.sh        # Test V8 library for Linux and macOS

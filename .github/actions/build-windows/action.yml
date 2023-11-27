@@ -23,16 +23,14 @@ runs:
       uses: MinoruSekine/setup-scoop@main
 
     - name: Setup SCCache
-      shell: cmd
+      shell: pwsh
       run: |
         scoop install sccache
 
-        set "sccacheDir=%GITHUB_WORKSPACE%\.sccache"
-        if not exist "%sccacheDir%" (
-          mkdir "%sccacheDir%"
-        )
+        $sccacheDir = "$Env:GITHUB_WORKSPACE`\.sccache"
+        New-Item -Path "$sccacheDir" -ItemType Directory -Force
 
-        echo SCCACHE_DIR=%sccacheDir% >> "%GITHUB_ENV%"
+        echo "SCCACHE_DIR=$sccacheDir" >> "$Env:GITHUB_ENV"
 
     - name: Download V8 Source
       shell: cmd
