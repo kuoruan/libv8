@@ -24,12 +24,6 @@ jobs:
           git submodule deinit -f .
           git submodule update --init
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-          cache: 'pip'
-
       - name: Build Release for Linux
         if: startsWith(matrix.os, 'ubuntu')
         uses: ./.github/actions/build-linux
