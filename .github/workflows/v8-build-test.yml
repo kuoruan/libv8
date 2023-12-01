@@ -21,8 +21,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: false
           fetch-depth: 1
+
+      - name: Reset Submodules
+        run: |
+          git submodule deinit -f .
+          git submodule update --init
 
       - name: Restore V8 Cache
         uses: actions/cache@v3
