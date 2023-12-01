@@ -30,9 +30,6 @@ jobs:
           python-version: '3.8'
           cache: 'pip'
 
-      - name: Install Python Dependencies
-        run: pip install -r requirements.txt
-
       - name: Build Release for Linux
         if: startsWith(matrix.os, 'ubuntu')
         uses: ./.github/actions/build-linux
