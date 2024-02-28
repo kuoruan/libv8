@@ -6,6 +6,7 @@ set "dir=%~dp0"
 set "branch=%~1"
 
 set "Path=%dir%\depot_tools;%Path%"
+set "DEPOT_TOOLS_UPDATE=0"
 set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
 
 if "%branch%"=="" (
