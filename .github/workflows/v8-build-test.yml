@@ -66,3 +66,4 @@ jobs:
             *.tar.xz
             *.7z
           retention-days: 7
+          overwrite: true
