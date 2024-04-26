@@ -15,7 +15,7 @@ jobs:
     name: Build V8
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest-large, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
@@ -42,7 +42,7 @@ jobs:
           archive-name: v8_${{ runner.os }}_amd64
 
       - name: Build V8 for macOS (Intel)
-        if: matrix.os == 'macos-latest-large'
+        if: matrix.os == 'macos-13'
         uses: ./.github/actions/build-macos
         with:
           archive-name: v8_${{ runner.os }}_amd64
