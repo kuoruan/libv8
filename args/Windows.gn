@@ -3,7 +3,6 @@ is_component_build=false
 is_debug=false
 strip_debug_info=true
 symbol_level=0
-target_cpu="x64"
 treat_warnings_as_errors=false
 use_custom_libcxx=false
 v8_enable_gdbjit=false

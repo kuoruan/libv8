@@ -36,13 +36,34 @@ elif [ "$os" = "macOS" ]; then
 	cores="$(sysctl -n hw.logicalcpu)"
 fi
 
+target_cpu="x64"
+
+case "$(uname -m)" in
+	x86_64)
+		target_cpu="x64"
+		;;
+	x86|i386|i686)
+		target_cpu="x86"
+		;;
+	arm64|aarch64)
+		target_cpu="arm64"
+		;;
+	arm*)
+		target_cpu="arm"
+		;;
+esac
+
+echo "Building V8 for $os $target_cpu"
+
 cc_wrapper=""
 if command -v ccache >/dev/null 2>&1 ; then
   cc_wrapper="ccache"
 fi
 
 gn_args="$(grep -v "^#" "${dir}/args/${os}.gn" | grep -v "^$")
-cc_wrapper=\"$cc_wrapper\""
+cc_wrapper=\"$cc_wrapper\"
+target_cpu=\"$target_cpu\"
+v8_target_cpu=\"$target_cpu\""
 
 cd "${dir}/v8"
 

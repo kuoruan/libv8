@@ -17,6 +17,14 @@ if "%os%"=="" (
   set "os=Windows"
 )
 
+if "%PROCESSOR_ARCHITECTURE%"=="x86" (
+  set "targetCpu=x86"
+) else (
+  set "targetCpu=x64"
+)
+
+echo Building V8 for %os% %targetCpu%
+
 setlocal EnableDelayedExpansion
 
 set "gnArgs="
@@ -39,7 +47,7 @@ if not errorlevel 1 (
   set "ccWrapper=sccache"
 )
 
-set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"""
+set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"" target_cpu=""%targetCpu%"" v8_target_cpu=""%targetCpu%"""
 
 pushd "%dir%\v8"
 
