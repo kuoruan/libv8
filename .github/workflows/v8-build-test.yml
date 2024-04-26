@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 1
 
       - name: Restore V8 Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             v8
@@ -54,7 +54,7 @@ jobs:
           archive-name: v8_${{ runner.os }}_amd64
 
       - name: Archive V8 Library
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: |
             *.tar.xz

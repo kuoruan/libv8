@@ -39,7 +39,7 @@ jobs:
           archive-name: v8_${{ runner.os }}_amd64
 
       - name: Upload Archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: |
             *.tar.xz
@@ -52,13 +52,13 @@ jobs:
     needs: build
     steps:
       - name: Download Archives
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Display Downloads
         run: ls -lhR artifact
 
       - name: Upload Archive
-        uses: softprops/action-gh-release@master
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref_name }}

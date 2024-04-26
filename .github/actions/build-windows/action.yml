@@ -12,7 +12,7 @@ runs:
   using: "composite"
   steps:
     - name: Restore SCCache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .sccache
         key: ${{ runner.os }}:libv8:sccache:${{ github.run_number }}
@@ -24,7 +24,7 @@ runs:
       run: .\depot_tools\bootstrap\win_tools.bat
 
     - name: Setup Scoop
-      uses: MinoruSekine/setup-scoop@main
+      uses: MinoruSekine/setup-scoop@v4
 
     - name: Setup Build Tools
       shell: pwsh
