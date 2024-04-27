@@ -15,9 +15,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: .ccache
-        key: ${{ runner.os }}:libv8:ccache:${{ github.run_number }}
+        key: ${{ runner.os }}-${{ runner.arch }}:libv8:ccache:${{ github.run_number }}
         restore-keys: |
-          ${{ runner.os }}:libv8:ccache:
+          ${{ runner.os }}-${{ runner.arch }}:libv8:ccache:
 
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -51,7 +51,6 @@ runs:
       run: ccache -s
 
     - name: Test V8
-      continue-on-error: true
       shell: bash
       run: ./v8_test.sh
 

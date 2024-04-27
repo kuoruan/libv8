@@ -36,22 +36,24 @@ elif [ "$os" = "macOS" ]; then
 	cores="$(sysctl -n hw.logicalcpu)"
 fi
 
-target_cpu="x64"
-
-case "$(uname -m)" in
-	x86_64)
-		target_cpu="x64"
-		;;
-	x86|i386|i686)
-		target_cpu="x86"
-		;;
-	arm64|aarch64)
-		target_cpu="arm64"
-		;;
-	arm*)
-		target_cpu="arm"
-		;;
-esac
+if [ -n "$RUNNER_ARCH" ]; then
+	target_cpu="$(echo $RUNNER_ARCH | tr '[:upper:]' '[:lower:]')"
+else
+	case "$(uname -m)" in
+		x86_64)
+			target_cpu="x64"
+			;;
+		x86|i386|i686)
+			target_cpu="x86"
+			;;
+		arm64|aarch64)
+			target_cpu="arm64"
+			;;
+		arm*)
+			target_cpu="arm"
+			;;
+	esac
+fi
 
 echo "Building V8 for $os $target_cpu"
 

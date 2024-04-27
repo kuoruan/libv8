@@ -16,6 +16,7 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Get Lastest Stable Version
+        shell: bash
         run: |
           current_v8_version="$(head -n1 VERSION | cut -d'-' -f1)"
 
@@ -33,6 +34,7 @@ jobs:
 
       - name: Make Commit
         if: env.NEW_V8_VERSION != '0'
+        shell: bash
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"

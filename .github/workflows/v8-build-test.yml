@@ -33,37 +33,43 @@ jobs:
             .gclient_entries
             .gclient_previous_sync_commits
             .cipd
-          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+          key: ${{ runner.os }}-${{ runner.arch }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}:libv8:v8:
+
+      - name: Initialize Archive Name
+        if: runner.os != 'Windows'
+        shell: bash
+        run: ./.github/workflows/scripts/archive-name.sh
+
+      - name: Initialize Archive Name (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: .\.github\workflows\scripts\archive-name.ps1
 
       - name: Build V8 for Linux
-        if: matrix.os == 'ubuntu-latest'
+        if: startsWith(matrix.os, 'ubuntu')
         uses: ./.github/actions/build-linux
         with:
-          archive-name: v8_${{ runner.os }}_amd64
+          archive-name: ${{ env.ARCHIVE_NAME }}
 
-      - name: Build V8 for macOS (Intel)
-        if: matrix.os == 'macos-13'
+      - name: Build V8 for macOS (${{ runner.arch }})
+        if: startsWith(matrix.os, 'macos')
         uses: ./.github/actions/build-macos
         with:
-          archive-name: v8_${{ runner.os }}_amd64
-
-      - name: Build V8 for macOS (Apple Silicon)
-        if: matrix.os == 'macos-latest'
-        uses: ./.github/actions/build-macos
-        with:
-          archive-name: v8_${{ runner.os }}_arm64
+          archive-name: ${{ env.ARCHIVE_NAME }}
 
       - name: Build V8 for Windows
-        if: matrix.os == 'windows-latest'
+        if: startsWith(matrix.os, 'windows')
         uses: ./.github/actions/build-windows
         with:
-          archive-name: v8_${{ runner.os }}_amd64
+          archive-name: ${{ env.ARCHIVE_NAME }}
 
       - name: Archive V8 Library
         uses: actions/upload-artifact@v4
         with:
+          name: ${{ env.ARCHIVE_NAME }}
           path: |
             *.tar.xz
             *.7z
           retention-days: 7
-          overwrite: true

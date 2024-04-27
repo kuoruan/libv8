@@ -13,7 +13,25 @@ if "%os%"=="" (
 )
 
 if "%archiveName%"=="" (
-  set "archive=v8_%os%_amd64.7z"
+  if "%RUNNER_ARCH%"=="X86" (
+    set "arch=x86"
+  ) else if "%RUNNER_ARCH%"=="X64" (
+    set "arch=x64"
+  ) else if "%RUNNER_ARCH%"=="ARM64" (
+    set "arch=arm64"
+  ) else if "%RUNNER_ARCH%"=="ARM" (
+    set "arch=arm"
+  ) else (
+    if "%PROCESSOR_ARCHITECTURE%"=="x86" (
+      set "arch=x86"
+    ) else if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+      set "arch=arm64"
+    ) else (
+      set "arch=x64"
+    )
+  )
+
+  set "archive=v8_%os%_%arch%.7z"
 ) else (
   set "archive=%archiveName%.7z"
 )

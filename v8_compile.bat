@@ -17,10 +17,22 @@ if "%os%"=="" (
   set "os=Windows"
 )
 
-if "%PROCESSOR_ARCHITECTURE%"=="x86" (
+if "%RUNNER_ARCH%"=="X86" (
   set "targetCpu=x86"
-) else (
+) else if "%RUNNER_ARCH%"=="ARM64" (
+  set "targetCpu=arm64"
+) else if "%RUNNER_ARCH%"=="X64" (
   set "targetCpu=x64"
+) else if "%RUNNER_ARCH%"=="ARM" (
+  set "targetCpu=arm"
+) else (
+  if "%PROCESSOR_ARCHITECTURE%"=="x86" (
+    set "targetCpu=x86"
+  ) else if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+    set "targetCpu=arm64"
+  ) else (
+    set "targetCpu=x64"
+  )
 )
 
 echo Building V8 for %os% %targetCpu%

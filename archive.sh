@@ -4,6 +4,7 @@ set -e
 
 dir="$(cd "$(dirname "$0")" && pwd)"
 
+archive_name="$1"
 output_dir="${dir}/pack"
 
 os="$RUNNER_OS"
@@ -21,7 +22,30 @@ if [ -z "$os" ]; then
   esac
 fi
 
-archive="${1:-v8_${os}_amd64}.tar.xz"
+if [ -z "$archive_name" ]; then
+  if [ -n "$RUNNER_ARCH" ]; then
+    arch="$(echo $RUNNER_ARCH | tr '[:upper:]' '[:lower:]')"
+  else
+    case "$(uname -m)" in
+      x86_64)
+        arch="x64"
+        ;;
+      x86|i386|i686)
+        arch="x86"
+        ;;
+      arm64|aarch64)
+        arch="arm64"
+        ;;
+      arm*)
+        arch="arm"
+        ;;
+    esac
+  fi
+
+  archive="v8_${os}_${arch}.tar.xz"
+else
+  archive="${archive_name}.tar.xz"
+fi
 
 mkdir "$output_dir" || true
 
