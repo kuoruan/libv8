@@ -47,9 +47,9 @@ If you want to build an old version, you may need to modify the build scripts an
 
 You can find the match `depot_tools` version for the V8 version in the `DEPS` file in the V8 source code.
 
-For example, the `depot_tools` version for V8 version `10.6.1` is `git_revision: 0ba2fd429dd6db431fcbee6995c1278d2a3657a0`.
+For example, the `depot_tools` version for V8 version `10.6.1` is git revision: `0ba2fd429dd6db431fcbee6995c1278d2a3657a0`.
 
-So you can use the following command to checkout the `depot_tools` version:
+So you can use the following command to checkout the target `depot_tools` version:
 
 ```bash
 # make sure you have `git` installed
@@ -65,6 +65,6 @@ The `depot_tools` may require a specific version of `python`.` You can find the 
 
 ### Modify the Build Scripts
 
-With old version of `depot_tools`, you may need to modify the build scripts to make it work.
-
 The `gclient`, `gn`, `ninja` and other tools may have different arguments or behaviors in the old versions.
+
+The `v8_download`, `v8_compile` as well as other scripts may need to be modified.
