@@ -23,7 +23,7 @@ jobs:
       - name: Initialize Archive Name
         if: runner.os != 'Windows'
         shell: bash
-        run: ./github/workflows/scripts/archive-name.sh
+        run: ./.github/workflows/scripts/archive-name.sh
 
       - name: Initialize Archive Name (Windows)
         if: runner.os == 'Windows'
