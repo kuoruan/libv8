@@ -16,6 +16,6 @@ branch="${1:-"$version"}"
 test -n "$branch"
 
 (
-	set -x
-	gclient sync --no-history --reset -r "$branch"
+  set -x
+  gclient sync --no-history --reset -r "$branch"
 )
