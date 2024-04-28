@@ -3,13 +3,20 @@
 setlocal
 
 set "dir=%~dp0"
+set "v8Dir=%dir%\v8"
 
-if not exist "%dir%\v8" (
-    echo V8 not found
-    exit /b 1
+if not exist "%v8Dir%" (
+  echo V8 not found at %v8Dir%
+  exit /b 1
 )
 
-set "Path=%dir%\depot_tools;%Path%"
+set "depotToolsDir=%v8Dir%\third_party\depot_tools"
+
+if not exist "%depotToolsDir%" (
+  set "depotToolsDir=%dir%\depot_tools"
+)
+
+set "Path=%depotToolsDir%;%Path%"
 set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
 
 set "os=%RUNNER_OS%"

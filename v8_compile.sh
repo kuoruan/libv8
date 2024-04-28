@@ -3,13 +3,20 @@
 set -e
 
 dir="$(cd "$(dirname "$0")" && pwd)"
+v8_dir="${dir}/v8"
 
-if [ ! -d "${dir}/v8" ]; then
-	echo "v8 not found"
+if [ ! -d "$v8_dir" ]; then
+	echo "v8 not found at $v8_dir"
 	exit 1
 fi
 
-PATH="${dir}/depot_tools:$PATH"
+depot_tools_dir="${v8_dir}/third_party/depot_tools"
+
+if [ ! -d "$depot_tools_dir" ]; then
+	depot_tools_dir="${dir}/depot_tools"
+fi
+
+PATH="${depot_tools_dir}:$PATH"
 export PATH
 
 os="$RUNNER_OS"
