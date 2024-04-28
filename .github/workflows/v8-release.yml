@@ -64,6 +64,8 @@ jobs:
     steps:
       - name: Download Archives
         uses: actions/download-artifact@v4
+        with:
+          path: artifact
 
       - name: Display Downloads
         run: ls -lhR artifact
