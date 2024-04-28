@@ -79,5 +79,5 @@ jobs:
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            artifact/*.tar.xz
-            artifact/*.7z
+            artifact/**/*.tar.xz
+            artifact/**/*.7z
