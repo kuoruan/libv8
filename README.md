@@ -61,7 +61,7 @@ git checkout 0ba2fd429dd6db431fcbee6995c1278d2a3657a0
 
 ### Find the Match `python` Version
 
-The `depot_tools` may require a specific version of `python`.` You can find the required version in the `depot_tools` README file.
+The `depot_tools` may require a specific version of `python`. You can find the required version in the `depot_tools` README file.
 
 ### Modify the Build Scripts
 
