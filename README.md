@@ -28,8 +28,43 @@
 ## Custom Version Build
 
 - Fork this repository.
-- Modify the `VERSION` file to change the V8 version.
+- Modify the `VERSION` file to change the V8 version. (All versions can be found [here](https://chromium.googlesource.com/v8/v8.git/+refs))
 - Commit and push to GitHub.
 - Wait for the test build to complete.
 - Tag the commit with the version number(prefixed with `v`) and push to GitHub.
 - Wait for the release to complete.
+
+### Build Old Versions
+
+**Note**: Usually, we can only build the versions within the last year.
+
+ - The old versions may not be compatible with the latest tools.
+ - The old versions may require old version of toolchains, which may not be available in the latest systems.
+
+If you want to build an old version, you may need to modify the build scripts and use the old version of `depot_tools` and other tools.
+
+### Find the Match `depot_tools` Version
+
+You can find the match `depot_tools` version for the V8 version in the `DEPS` file in the V8 source code.
+
+For example, the `depot_tools` version for V8 version `10.6.1` is `git_revision: 0ba2fd429dd6db431fcbee6995c1278d2a3657a0`.
+
+So you can use the following command to checkout the `depot_tools` version:
+
+```bash
+# make sure you have `git` installed
+git submodule update --init
+
+cd depot_tools
+git checkout 0ba2fd429dd6db431fcbee6995c1278d2a3657a0
+```
+
+### Find the Match `python` Version
+
+The `depot_tools` may require a specific version of `python`.` You can find the required version in the `depot_tools` README file.
+
+### Modify the Build Scripts
+
+With old version of `depot_tools`, you may need to modify the build scripts to make it work.
+
+The `gclient`, `gn`, `ninja` and other tools may have different arguments or behaviors in the old versions.
