@@ -9,6 +9,7 @@ on:
       - "depot_tools"
       - ".gitignore"
       - ".gitpod*"
+  workflow_dispatch:
 
 jobs:
   build-test:
