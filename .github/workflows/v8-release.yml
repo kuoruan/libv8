@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     name: Build V8
+    if: github.repository_owner == 'kuoruan'
     strategy:
       matrix:
         os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
