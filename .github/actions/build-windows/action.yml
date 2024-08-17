@@ -36,6 +36,11 @@ runs:
 
         Write-Output "SCCACHE_DIR=$sccacheDir" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8
 
+    - name: Setup UCRT64
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+
     - name: Download V8 Source
       shell: cmd
       run: .\v8_download.bat
