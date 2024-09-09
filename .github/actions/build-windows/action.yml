@@ -36,11 +36,6 @@ runs:
 
         Write-Output "SCCACHE_DIR=$sccacheDir" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8
 
-    - name: Setup UCRT64
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-
     - name: Download V8 Source
       shell: cmd
       run: .\v8_download.bat
@@ -52,6 +47,12 @@ runs:
     - name: Show SCCache Status
       shell: pwsh
       run: sccache --show-stats
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-version: latest
+        msbuild-architecture: x64
 
     - name: Setup Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1
