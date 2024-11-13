@@ -48,12 +48,6 @@ runs:
       shell: pwsh
       run: sccache --show-stats
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
-      with:
-        vs-version: latest
-        msbuild-architecture: x64
-
     - name: Setup Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1
 
