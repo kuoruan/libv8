@@ -52,7 +52,6 @@ runs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Test V8
-      continue-on-error: true
       shell: cmd
       run: .\v8_test.bat
 

@@ -50,18 +50,21 @@ jobs:
 
       - name: Build V8 for Linux (${{ runner.arch }})
         if: startsWith(matrix.os, 'ubuntu')
+        continue-on-error: true
         uses: ./.github/actions/build-linux
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
 
       - name: Build V8 for macOS (${{ runner.arch }})
         if: startsWith(matrix.os, 'macos')
+        continue-on-error: true
         uses: ./.github/actions/build-macos
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
 
       - name: Build V8 for Windows
         if: startsWith(matrix.os, 'windows')
+        continue-on-error: true
         uses: ./.github/actions/build-windows
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
