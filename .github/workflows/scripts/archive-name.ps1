@@ -1,5 +1,13 @@
 
-$archiveName = "v8_$Env:RUNNER_OS`_$($Env:RUNNER_ARCH.ToLower())"
+param(
+  [string]$arch
+)
+
+if ([string]::IsNullOrEmpty($arch)) {
+  $arch = $Env:RUNNER_ARCH
+}
+
+$archiveName = "v8_$Env:RUNNER_OS`_$($arch.ToLower())"
 
 Write-Host "Using Archive Name: $archiveName"
 

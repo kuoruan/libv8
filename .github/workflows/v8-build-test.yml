@@ -60,12 +60,12 @@ jobs:
       - name: Initialize Archive Name
         if: runner.os != 'Windows'
         shell: bash
-        run: ./.github/workflows/scripts/archive-name.sh
+        run: ./.github/workflows/scripts/archive-name.sh ${{ matrix.arch }}
 
       - name: Initialize Archive Name (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: .\.github\workflows\scripts\archive-name.ps1
+        run: .\.github\workflows\scripts\archive-name.ps1 ${{ matrix.arch }}
 
       - name: Build V8 for Linux (${{ matrix.arch }})
         if: startsWith(matrix.os, 'ubuntu')
