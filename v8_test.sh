@@ -25,7 +25,7 @@ os="$(sh "${dir}/scripts/get_os.sh")"
 
 # Add macOS-specific frameworks
 if [ "$os" = "macOS" ]; then
-  macos_frameworks="-framework CoreFoundation"
+  macos_frameworks="-framework Foundation"
 else
   macos_frameworks=""
 fi
@@ -35,9 +35,9 @@ echo "Testing V8 for architecture: $target_cpu"
 (
   set -x
   g++ -I"${dir}/v8" -I"${dir}/v8/include" \
-    "${dir}/v8/samples/hello-world.cc" -o hello_world \
-    -lv8_monolith -L"${dir}/v8/out/release/obj/" \
-    -pthread -std=c++20 -ldl $macos_frameworks
+    "${dir}/v8/samples/hello-world.cc" -o hello_world -fno-rtti \
+    -lv8_monolith -ldl -L"${dir}/v8/out/release/obj/" \
+    -pthread -std=c++20 -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX $macos_frameworks
 )
 
 sh -c ./hello_world
