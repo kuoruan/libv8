@@ -21,6 +21,17 @@ jobs:
           clean: true
           fetch-depth: 1
 
+      - name: Git Setup and Cleanup
+        shell: bash
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.filemode false
+          git config --global core.fscache true
+          git config --global core.preloadindex true
+
+          git submodule foreach --recursive 'git clean -ffdx'
+          git submodule foreach --recursive 'git reset --hard HEAD'
+
       - name: Initialize Archive Name
         if: runner.os != 'Windows'
         shell: bash
