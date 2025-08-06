@@ -7,6 +7,11 @@ inputs:
     default: v8_Linux
     required: false
     type: string
+  arch:
+    description: 'Architecture to build for'
+    default: x64
+    required: false
+    type: string
 
 runs:
   using: "composite"
@@ -44,7 +49,7 @@ runs:
 
     - name: Compile V8
       shell: bash
-      run: ./v8_compile.sh
+      run: ./v8_compile.sh ${{ inputs.arch }}
 
     - name: Show CCache Status
       shell: bash

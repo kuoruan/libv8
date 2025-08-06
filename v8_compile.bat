@@ -3,6 +3,8 @@
 setlocal
 
 set "dir=%~dp0"
+set "targetCpu=%~1"
+
 set "v8Dir=%dir%\v8"
 
 if not exist "%v8Dir%" (
@@ -26,8 +28,10 @@ for /F "delims=" %%i in ('call "%dir%\scripts\get_os.bat"') do (
   set "os=%%i"
 )
 
-for /F "delims=" %%i in ('call "%dir%\scripts\get_arch.bat"') do (
-  set "targetCpu=%%i"
+if "%targetCpu%"=="" (
+  for /F "delims=" %%i in ('call "%dir%\scripts\get_arch.bat"') do (
+    set "targetCpu=%%i"
+  )
 )
 
 echo Building V8 for %os% %targetCpu%

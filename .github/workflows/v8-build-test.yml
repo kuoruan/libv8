@@ -16,7 +16,13 @@ jobs:
     name: Build V8
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest-large, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x86, x64, arm, arm64]
+      exclude:
+        - os: macos-latest
+          arch: x86
+        - os: macos-latest
+          arch: arm
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
@@ -45,9 +51,9 @@ jobs:
             .gclient_entries
             .gclient_previous_sync_commits
             .cipd
-          key: ${{ runner.os }}-${{ runner.arch }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+          key: ${{ runner.os }}-${{ matrix.arch }}:libv8:v8:${{ hashFiles('**/VERSION') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}:libv8:v8:
+            ${{ runner.os }}-${{ matrix.arch }}:libv8:v8:
 
       - name: Initialize Archive Name
         if: runner.os != 'Windows'
@@ -59,26 +65,29 @@ jobs:
         shell: pwsh
         run: .\.github\workflows\scripts\archive-name.ps1
 
-      - name: Build V8 for Linux (${{ runner.arch }})
+      - name: Build V8 for Linux (${{ matrix.arch }})
         if: startsWith(matrix.os, 'ubuntu')
         continue-on-error: true
         uses: ./.github/actions/build-linux
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
-      - name: Build V8 for macOS (${{ runner.arch }})
+      - name: Build V8 for macOS (${{ matrix.arch }})
         if: startsWith(matrix.os, 'macos')
         continue-on-error: true
         uses: ./.github/actions/build-macos
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
-      - name: Build V8 for Windows
+      - name: Build V8 for Windows (${{ matrix.arch }})
         if: startsWith(matrix.os, 'windows')
         continue-on-error: true
         uses: ./.github/actions/build-windows
         with:
           archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
       - name: Archive V8 Library
         uses: actions/upload-artifact@v4

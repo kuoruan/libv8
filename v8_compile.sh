@@ -3,6 +3,8 @@
 set -e
 
 dir="$(cd "$(dirname "$0")" && pwd)"
+target_cpu="$1"
+
 v8_dir="${dir}/v8"
 
 if [ ! -d "$v8_dir" ]; then
@@ -32,7 +34,9 @@ elif [ "$os" = "macOS" ]; then
   cores="$(sysctl -n hw.logicalcpu)"
 fi
 
-target_cpu="$(sh "${dir}/scripts/get_arch.sh")"
+if [ -z "$target_cpu" ]; then
+  target_cpu="$(sh "${dir}/scripts/get_arch.sh")"
+fi
 
 echo "Building V8 for $os $target_cpu"
 
