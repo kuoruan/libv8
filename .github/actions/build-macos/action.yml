@@ -42,6 +42,10 @@ runs:
       shell: bash
       run: ./v8_download.sh
 
+    - name: Show Installed SDKs
+      shell: bash
+      run: xcodebuild -showsdks
+
     - name: Compile V8
       shell: bash
       run: ./v8_compile.sh
