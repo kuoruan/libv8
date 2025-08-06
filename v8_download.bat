@@ -5,10 +5,20 @@ setlocal
 set "dir=%~dp0"
 set "branch=%~1"
 
-set "Path=%dir%\depot_tools;%Path%"
-set "DEPOT_TOOLS_UPDATE=0"
+set "depotToolsDir=%dir%\depot_tools"
+
+if not exist "%depotToolsDir%" (
+  echo Error: depot_tools directory not found at %depotToolsDir%
+  exit /b 1
+)
+
+set "DEPOT_TOOLS_DIR=%depotToolsDir%"
 set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
 
+set "Path=%DEPOT_TOOLS_DIR%;%Path%"
+
+rem Check if branch is provided as an argument
+rem If not, read the branch from VERSION file
 if "%branch%"=="" (
   for /F "usebackq delims=" %%i in ("%dir%\VERSION") do (
     for /F "delims=-" %%b in ("%%i") do (

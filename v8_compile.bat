@@ -10,14 +10,17 @@ if not exist "%v8Dir%" (
   exit /b 1
 )
 
-set "depotToolsDir=%v8Dir%\third_party\depot_tools"
+set "depotToolsDir=%dir%\depot_tools"
 
 if not exist "%depotToolsDir%" (
-  set "depotToolsDir=%dir%\depot_tools"
+  echo Error: depot_tools directory not found at %depotToolsDir%
+  exit /b 1
 )
 
-set "Path=%depotToolsDir%;%Path%"
+set "DEPOT_TOOLS_DIR=%depotToolsDir%"
 set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
+
+set "Path=%DEPOT_TOOLS_DIR%;%Path%"
 
 set "os=%RUNNER_OS%"
 if "%os%"=="" (

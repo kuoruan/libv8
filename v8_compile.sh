@@ -10,13 +10,16 @@ if [ ! -d "$v8_dir" ]; then
   exit 1
 fi
 
-depot_tools_dir="${v8_dir}/third_party/depot_tools"
+depot_tools_dir="${dir}/depot_tools"
 
 if [ ! -d "$depot_tools_dir" ]; then
-  depot_tools_dir="${dir}/depot_tools"
+  echo "Error: depot_tools directory not found at ${depot_tools_dir}"
+  exit 1
 fi
 
-PATH="${depot_tools_dir}:$PATH"
+export DEPOT_TOOLS_DIR="$depot_tools_dir"
+
+PATH="${DEPOT_TOOLS_DIR}:$PATH"
 export PATH
 
 os="$RUNNER_OS"
