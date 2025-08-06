@@ -36,7 +36,7 @@ setlocal EnableDelayedExpansion
 
 set "args="
 
-for /F "eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
+for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
   set "args=!args!%%i "
 )
 
