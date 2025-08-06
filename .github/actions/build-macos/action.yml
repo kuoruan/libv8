@@ -27,7 +27,7 @@ runs:
     - name: Setup Build Tools
       shell: bash
       run: |
-        brew install ccache
+        brew install ccache xcodesorg/made/xcodes
 
         echo "$(brew --prefix ccache)/libexec" >> "$GITHUB_PATH"
         echo "CCACHE_CPP2=yes" >> "$GITHUB_ENV"
@@ -38,11 +38,8 @@ runs:
 
         echo "CCACHE_DIR=$ccacheDir" >> "$GITHUB_ENV"
 
-        if ! command -v xcversion >/dev/null 2>&1; then
-          gem install xcode-install
-        fi
-
-        xcversion install 15.2
+        xcodes install 16.2
+        xcodes select 16.2
 
     - name: Download V8 Source
       shell: bash
