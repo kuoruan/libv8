@@ -23,7 +23,7 @@ if not "%targetCpu%"=="%currentCpu%" (
   exit /b 0
 )
 
-call cl.exe /EHsc /std:c++20 /Zc:__cplusplus /permissive- ^
+call cl.exe /EHsc /std:c++20 /Zc:__cplusplus ^
   /I"%dir%\v8" /I"%dir%\v8\include" ^
   /Fe".\hello-world" "%dir%\v8\samples\hello-world.cc" ^
   /link "%dir%\v8\out\release\obj\v8_monolith.lib" ^
