@@ -57,7 +57,7 @@ runs:
 
     - name: Test V8
       shell: bash
-      run: ./v8_test.sh
+      run: ./v8_test.sh ${{ inputs.arch }}
 
     - name: Archive Release
       shell: bash

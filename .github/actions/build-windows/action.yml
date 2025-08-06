@@ -54,7 +54,7 @@ runs:
 
     - name: Test V8
       shell: cmd
-      run: .\v8_test.bat
+      run: .\v8_test.bat ${{ inputs.arch }}
 
     - name: Archive V8
       shell: pwsh

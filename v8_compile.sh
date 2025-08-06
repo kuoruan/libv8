@@ -40,6 +40,11 @@ fi
 
 echo "Building V8 for $os $target_cpu"
 
+if [ "$os" = "Linux" ]; then
+  # https://chromium.googlesource.com/chromium/src/+/master/docs/linux/chromium_arm.md
+  python3 "${v8_dir}/build/linux/sysroot_scripts/install-sysroot.py" --arch="$target_cpu"
+fi
+
 cc_wrapper=""
 if command -v ccache >/dev/null 2>&1 ; then
   cc_wrapper="ccache"

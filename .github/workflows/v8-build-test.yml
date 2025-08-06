@@ -23,6 +23,8 @@ jobs:
             arch: x86
           - os: macos-latest
             arch: arm
+          - os: windows-latest
+            arch: arm
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
