@@ -8,7 +8,6 @@ v8_static_library=true
 # v8_enable_gdbjit=false
 v8_enable_i18n_support=false
 v8_enable_test_features=false
-v8_enable_pointer_compression=true
 
 v8_use_external_startup_data=false
 
