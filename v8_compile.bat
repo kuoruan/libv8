@@ -49,18 +49,13 @@ echo Building V8 for %os% %targetCpu%
 
 setlocal EnableDelayedExpansion
 
-set "gnArgs="
+set "args="
 
-for /F "usebackq delims=" %%i in ("%dir%\args\%os%.gn") do (
-  set "line=%%i"
-
-  if not "!line!"=="" if not "!line:~0,1!"=="#" (
-    set "line=!line:"=""!"
-    set "gnArgs=!gnArgs!!line! "
-  )
+for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
+  set "args=!args!%%i "
 )
 
-endlocal & set "gnArgs=%gnArgs%"
+endlocal & set "gnArgs=%args%"
 
 set "ccWrapper="
 
@@ -69,7 +64,9 @@ if not errorlevel 1 (
   set "ccWrapper=sccache"
 )
 
-set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"" target_cpu=""%targetCpu%"" v8_target_cpu=""%targetCpu%"""
+set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"""
+set "gnArgs=%gnArgs% target_cpu=""%targetCpu%"""
+set "gnArgs=%gnArgs% v8_target_cpu=""%targetCpu%"""
 
 pushd "%dir%\v8"
 

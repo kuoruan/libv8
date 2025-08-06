@@ -72,10 +72,10 @@ if command -v ccache >/dev/null 2>&1 ; then
   cc_wrapper="ccache"
 fi
 
-gn_args="$(grep -v "^#" "${dir}/args/${os}.gn" | grep -v "^$")
-cc_wrapper=\"$cc_wrapper\"
-target_cpu=\"$target_cpu\"
-v8_target_cpu=\"$target_cpu\""
+gn_args="$(grep -v '^#\|^$' "${dir}/args/${os}.gn" | tr -d '\r' | tr '\n' ' ')"
+gn_args="${gn_args}cc_wrapper=$cc_wrapper"
+gn_args="${gn_args} target_cpu=$target_cpu"
+gn_args="${gn_args} v8_target_cpu=$target_cpu"
 
 cd "${dir}/v8"
 
