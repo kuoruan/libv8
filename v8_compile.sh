@@ -22,21 +22,7 @@ export DEPOT_TOOLS_DIR="$depot_tools_dir"
 PATH="${DEPOT_TOOLS_DIR}:$PATH"
 export PATH
 
-os="$RUNNER_OS"
-
-if [ -z "$os" ]; then
-  case "$(uname -s)" in
-    Linux)
-      os="Linux"
-      ;;
-    Darwin)
-      os="macOS"
-      ;;
-    *)
-      echo "Unknown OS type"
-      exit 1
-  esac
-fi
+os="$(sh "${dir}/scripts/get_os.sh")"
 
 cores="2"
 
@@ -46,24 +32,7 @@ elif [ "$os" = "macOS" ]; then
   cores="$(sysctl -n hw.logicalcpu)"
 fi
 
-if [ -n "$RUNNER_ARCH" ]; then
-  target_cpu="$(echo $RUNNER_ARCH | tr '[:upper:]' '[:lower:]')"
-else
-  case "$(uname -m)" in
-    x86_64)
-      target_cpu="x64"
-      ;;
-    x86|i386|i686)
-      target_cpu="x86"
-      ;;
-    arm64|aarch64)
-      target_cpu="arm64"
-      ;;
-    arm*)
-      target_cpu="arm"
-      ;;
-  esac
-fi
+target_cpu="$(sh "${dir}/scripts/get_arch.sh")"
 
 echo "Building V8 for $os $target_cpu"
 

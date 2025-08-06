@@ -22,27 +22,12 @@ set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
 
 set "Path=%DEPOT_TOOLS_DIR%;%Path%"
 
-set "os=%RUNNER_OS%"
-if "%os%"=="" (
-  set "os=Windows"
+for /F "delims=" %%i in ('call "%dir%\scripts\get_os.bat"') do (
+  set "os=%%i"
 )
 
-if "%RUNNER_ARCH%"=="X86" (
-  set "targetCpu=x86"
-) else if "%RUNNER_ARCH%"=="ARM64" (
-  set "targetCpu=arm64"
-) else if "%RUNNER_ARCH%"=="X64" (
-  set "targetCpu=x64"
-) else if "%RUNNER_ARCH%"=="ARM" (
-  set "targetCpu=arm"
-) else (
-  if "%PROCESSOR_ARCHITECTURE%"=="x86" (
-    set "targetCpu=x86"
-  ) else if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
-    set "targetCpu=arm64"
-  ) else (
-    set "targetCpu=x64"
-  )
+for /F "delims=" %%i in ('call "%dir%\scripts\get_arch.bat"') do (
+  set "targetCpu=%%i"
 )
 
 echo Building V8 for %os% %targetCpu%
@@ -51,7 +36,7 @@ setlocal EnableDelayedExpansion
 
 set "args="
 
-for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
+for /F "eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
   set "args=!args!%%i "
 )
 

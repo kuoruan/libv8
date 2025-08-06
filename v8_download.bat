@@ -20,7 +20,7 @@ set "Path=%DEPOT_TOOLS_DIR%;%Path%"
 rem Check if branch is provided as an argument
 rem If not, read the branch from VERSION file
 if "%branch%"=="" (
-  for /F "usebackq delims=-" %%i in ("%dir%\VERSION") do (
+  for /F "delims=-" %%i in ("%dir%\VERSION") do (
     set "branch=%%i"
     goto next
   )
