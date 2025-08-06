@@ -38,15 +38,14 @@ runs:
 
         echo "CCACHE_DIR=$ccacheDir" >> "$GITHUB_ENV"
 
-        xcodes select 16.2
-
     - name: Download V8 Source
       shell: bash
       run: ./v8_download.sh
 
-    - name: Show Installed SDKs
-      shell: bash
-      run: xcodebuild -showsdks
+    - name: Switch Xcode Version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '^16.2'
 
     - name: Compile V8
       shell: bash
