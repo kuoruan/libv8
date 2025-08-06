@@ -34,10 +34,11 @@ echo "Testing V8 for architecture: $target_cpu"
 
 (
   set -x
-  g++ -I"${dir}/v8" -I"${dir}/v8/include" \
+  clang++ -I"${dir}/v8" -I"${dir}/v8/include" \
     "${dir}/v8/samples/hello-world.cc" -o hello_world -fno-rtti \
     -lv8_monolith -ldl -L"${dir}/v8/out/release/obj/" \
-    -pthread -std=c++20 -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX $macos_frameworks
+    -pthread -std=c++20 -fuse-ld=lld $macos_frameworks \
+    -DV8_COMPRESS_POINTERS=1 -DV8_ENABLE_SANDBOX
 )
 
 sh -c ./hello_world
