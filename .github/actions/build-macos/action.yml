@@ -27,7 +27,7 @@ runs:
     - name: Setup Build Tools
       shell: bash
       run: |
-        brew install ccache
+        brew install ccache lld
 
         echo "$(brew --prefix ccache)/libexec" >> "$GITHUB_PATH"
 
