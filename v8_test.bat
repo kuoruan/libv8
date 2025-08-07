@@ -22,7 +22,7 @@ for /F "delims=" %%i in ('call "%dir%\scripts\get_os.bat"') do (
   set "os=%%i"
 )
 
-set "buildDir=%dir%\v8\out.gen\%os%.%targetCpu%.release"
+set "buildDir=%dir%\v8\out.gn\%os%.%targetCpu%.release"
 
 if not exist "%buildDir%" (
   echo Build directory not found: %buildDir%

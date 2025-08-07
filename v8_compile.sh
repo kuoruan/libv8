@@ -57,7 +57,7 @@ gn_args="${gn_args} v8_target_cpu=\"$target_cpu\""
 
 cd "${dir}/v8"
 
-build_dir="./out.gen/${os}.${target_cpu}.release"
+build_dir="./out.gn/${os}.${target_cpu}.release"
 
 if [ -d "$build_dir" ]; then
   # Clean up previous build directory

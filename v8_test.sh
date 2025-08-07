@@ -18,7 +18,7 @@ fi
 
 os="$(sh "${dir}/scripts/get_os.sh")"
 
-build_dir="${dir}/v8/out.gen/${os}.${target_cpu}.release"
+build_dir="${dir}/v8/out.gn/${os}.${target_cpu}.release"
 
 if [ ! -d "$build_dir" ]; then
   echo "Build directory not found: $build_dir"

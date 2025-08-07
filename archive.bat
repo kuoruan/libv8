@@ -17,7 +17,7 @@ if "%arch%"=="" (
   )
 )
 
-set "buildDir=%dir%\v8\out.gen\%os%.%arch%.release"
+set "buildDir=%dir%\v8\out.gn\%os%.%arch%.release"
 
 if not exist "%buildDir%" (
   echo Build directory not found: %buildDir%

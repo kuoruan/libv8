@@ -13,7 +13,7 @@ if [ -z "$arch" ]; then
   arch="$(sh "${dir}/scripts/get_arch.sh")"
 fi
 
-build_dir="${dir}/v8/out.gen/${os}.${arch}.release"
+build_dir="${dir}/v8/out.gn/${os}.${arch}.release"
 
 if [ ! -d "$build_dir" ]; then
   echo "Build directory not found: $build_dir"

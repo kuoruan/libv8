@@ -59,7 +59,7 @@ set "gnArgs=%gnArgs% v8_target_cpu=""%targetCpu%"""
 
 pushd "%dir%\v8"
 
-set "buildDir=.\out.gen\%os%.%targetCpu%.release"
+set "buildDir=.\out.gn\%os%.%targetCpu%.release"
 
 if exist "%buildDir%" (
   rem Clean up previous build directory
