@@ -52,27 +52,17 @@ jobs:
             v8
             .gclient_entries
             .gclient_previous_sync_commits
+            .gcs_entries
             .cipd
-          key: ${{ runner.os }}-${{ matrix.arch }}:libv8:v8:${{ hashFiles('**/VERSION') }}
+          key: ${{ runner.os }}:libv8:v8:${{ hashFiles('**/VERSION') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}:libv8:v8:
-
-      - name: Initialize Archive Name
-        if: runner.os != 'Windows'
-        shell: bash
-        run: ./.github/workflows/scripts/archive-name.sh ${{ matrix.arch }}
-
-      - name: Initialize Archive Name (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: .\.github\workflows\scripts\archive-name.ps1 ${{ matrix.arch }}
+            ${{ runner.os }}:libv8:v8:
 
       - name: Build V8 for Linux (${{ matrix.arch }})
         if: startsWith(matrix.os, 'ubuntu')
         continue-on-error: true
         uses: ./.github/actions/build-linux
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
           arch: ${{ matrix.arch }}
 
       - name: Build V8 for macOS (${{ matrix.arch }})
@@ -80,7 +70,6 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/build-macos
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
           arch: ${{ matrix.arch }}
 
       - name: Build V8 for Windows (${{ matrix.arch }})
@@ -88,11 +77,11 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/build-windows
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
           arch: ${{ matrix.arch }}
 
       - name: Archive V8 Library
         uses: actions/upload-artifact@v4
+        if: ${{ env.ARCHIVE_NAME != '' }}
         with:
           name: ${{ env.ARCHIVE_NAME }}
           path: |

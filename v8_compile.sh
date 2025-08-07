@@ -57,17 +57,19 @@ gn_args="${gn_args} v8_target_cpu=\"$target_cpu\""
 
 cd "${dir}/v8"
 
-gn gen "./out/release" --args="$gn_args"
+build_dir="./out.gen/${os}.${target_cpu}.release"
+
+gn gen "$build_dir" --args="$gn_args"
 
 echo "==================== Build args start ===================="
-gn args "./out/release" --list | tee "${dir}/gn-args_${os}.txt"
+gn args "$build_dir" --list | tee "${dir}/gn-args_${os}.txt"
 echo "==================== Build args end ===================="
 
 (
   set -x
-  ninja -C "./out/release" -j "$cores" v8_monolith
+  ninja -C "$build_dir" -j "$cores" v8_monolith
 )
 
-ls -lh ./out/release/obj/libv8_*.a
+ls -lh ${build_dir}/obj/libv8_*.a
 
 cd -

@@ -2,11 +2,6 @@ name: Build for macOS
 description: 'Build V8 for macOS'
 
 inputs:
-  archive-name:
-    description: 'Base name of the archive to create'
-    default: v8_macOS
-    required: false
-    type: string
   arch:
     description: 'Architecture to build for'
     default: x64
@@ -20,9 +15,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: .ccache
-        key: ${{ runner.os }}-${{ runner.arch }}:libv8:ccache:${{ github.run_number }}
+        key: ${{ runner.os }}-${{ inputs.arch }}:libv8:ccache:${{ github.run_number }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}:libv8:ccache:
+          ${{ runner.os }}-${{ inputs.arch }}:libv8:ccache:
 
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -66,4 +61,4 @@ runs:
 
     - name: Archive V8
       shell: bash
-      run: ./archive.sh ${{ inputs.archive-name }}
+      run: ./archive.sh ${{ inputs.arch }}

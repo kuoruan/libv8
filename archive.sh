@@ -3,54 +3,37 @@
 set -e
 
 dir="$(cd "$(dirname "$0")" && pwd)"
+arch="$1"
 
-archive_name="$1"
 output_dir="${dir}/pack"
 
-os="$RUNNER_OS"
-if [ -z "$os" ]; then
-  case "$(uname -s)" in
-    Linux)
-      os="Linux"
-      ;;
-    Darwin)
-      os="macOS"
-      ;;
-    *)
-      echo "Unknown OS type"
-      exit 1
-  esac
+os="$(sh "${dir}/scripts/get_os.sh")"
+
+if [ -z "$arch" ]; then
+  arch="$(sh "${dir}/scripts/get_arch.sh")"
 fi
 
-if [ -z "$archive_name" ]; then
-  if [ -n "$RUNNER_ARCH" ]; then
-    arch="$(echo $RUNNER_ARCH | tr '[:upper:]' '[:lower:]')"
-  else
-    case "$(uname -m)" in
-      x86_64)
-        arch="x64"
-        ;;
-      x86|i386|i686)
-        arch="x86"
-        ;;
-      arm64|aarch64)
-        arch="arm64"
-        ;;
-      arm*)
-        arch="arm"
-        ;;
-    esac
-  fi
+build_dir="${dir}/v8/out.gen/${os}.${arch}.release"
 
-  archive="v8_${os}_${arch}.tar.xz"
+if [ ! -d "$build_dir" ]; then
+  echo "Build directory not found: $build_dir"
+  exit 1
+fi
+
+archive_name="v8_${os}_${arch}"
+archive="${archive_name}.tar.xz"
+
+if [ -z "$GITHUB_ENV" ]; then
+  echo "GITHUB_ENV is not set, skipping environment variable export."
 else
-  archive="${archive_name}.tar.xz"
+  echo "Using Archive Name: $archive_name"
+  echo "ARCHIVE_NAME=$archive_name" >> "$GITHUB_ENV"
 fi
 
 mkdir "$output_dir" || true
 
 cp -r "${dir}/v8/include" \
-  "${dir}/v8/out/release/obj/libv8_monolith.a" \
+  "${build_dir}/obj/libv8_monolith.a" \
   "${dir}/gn-args_${os}.txt" \
   "$output_dir"
 

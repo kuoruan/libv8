@@ -59,24 +59,26 @@ set "gnArgs=%gnArgs% v8_target_cpu=""%targetCpu%"""
 
 pushd "%dir%\v8"
 
-call gn gen ".\out\release" --args="%gnArgs%"
+set buildDir=".\out.gen\%os%.%targetCpu%.release"
+
+call gn gen "%buildDir%" --args="%gnArgs%"
 if errorlevel 1 (
   echo Failed to generate build files.
   exit /b %errorlevel%
 )
 
 echo ==================== Build args start ====================
-call gn args ".\out\release" --list > "%dir%\gn-args_%os%.txt"
+call gn args "%buildDir%" --list > "%dir%\gn-args_%os%.txt"
 type "%dir%\gn-args_%os%.txt"
 echo ==================== Build args end ====================
 
-call ninja -C ".\out\release" -j %NUMBER_OF_PROCESSORS% v8_monolith
+call ninja -C "%buildDir%" -j %NUMBER_OF_PROCESSORS% v8_monolith
 if errorlevel 1 (
   echo Build failed.
   exit /b %errorlevel%
 )
 
-dir ".\out\release\obj\v8_*.lib"
+dir "%buildDir%\obj\v8_*.lib"
 
 popd
 

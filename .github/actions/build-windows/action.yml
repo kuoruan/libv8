@@ -2,11 +2,6 @@ name: Build for Windows
 description: 'Build V8 for Windows'
 
 inputs:
-  archive-name:
-    description: 'Base name of the archive to create'
-    default: v8_Windows
-    required: false
-    type: string
   arch:
     description: 'Architecture to build for'
     default: x64
@@ -20,9 +15,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: .sccache
-        key: ${{ runner.os }}-${{ runner.arch }}:libv8:sccache:${{ github.run_number }}
+        key: ${{ runner.os }}-${{ inputs.arch }}:libv8:sccache:${{ github.run_number }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}:libv8:sccache:
+          ${{ runner.os }}-${{ inputs.arch }}:libv8:sccache:
 
     - name: Setup Scoop
       uses: MinoruSekine/setup-scoop@v4
@@ -58,4 +53,4 @@ runs:
 
     - name: Archive V8
       shell: pwsh
-      run: .\archive.bat ${{ inputs.archive-name }}
+      run: .\archive.bat ${{ inputs.arch }}

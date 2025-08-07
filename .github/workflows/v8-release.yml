@@ -11,7 +11,15 @@ jobs:
     if: github.repository_owner == 'kuoruan'
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest-large, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x86, x64, arm, arm64]
+        exclude:
+          - os: macos-latest
+            arch: x86
+          - os: macos-latest
+            arch: arm
+          - os: windows-latest
+            arch: arm
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
@@ -32,39 +40,30 @@ jobs:
           git submodule foreach --recursive 'git clean -ffdx'
           git submodule foreach --recursive 'git reset --hard HEAD'
 
-      - name: Initialize Archive Name
-        if: runner.os != 'Windows'
-        shell: bash
-        run: ./.github/workflows/scripts/archive-name.sh
-
-      - name: Initialize Archive Name (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: .\.github\workflows\scripts\archive-name.ps1
-
-      - name: Build Release for Linux (${{ runner.arch }})
+      - name: Build Release for Linux (${{ matrix.arch }})
         if: startsWith(matrix.os, 'ubuntu')
         continue-on-error: true
         uses: ./.github/actions/build-linux
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
-      - name: Build Release for macOS (${{ runner.arch }})
+      - name: Build Release for macOS (${{ matrix.arch }})
         if: startsWith(matrix.os, 'macos')
         continue-on-error: true
         uses: ./.github/actions/build-macos
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
       - name: Build Release for Windows
         if: startsWith(matrix.os, 'windows')
         continue-on-error: true
         uses: ./.github/actions/build-windows
         with:
-          archive-name: ${{ env.ARCHIVE_NAME }}
+          arch: ${{ matrix.arch }}
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
+        if: ${{ env.ARCHIVE_NAME != '' }}
         with:
           name: ${{ env.ARCHIVE_NAME }}
           path: |
