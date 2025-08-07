@@ -9,6 +9,3 @@ RUN sudo apt-get -q update && \
 RUN sudo update-ccache-symlinks
 
 ENV PATH="/usr/lib/ccache:$PATH"
-
-ENV CCACHE_SLOPPINESS="file_mtime,file_ctime"
-ENV CCACHE_COMPILERCHECK="content"
