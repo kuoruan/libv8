@@ -33,6 +33,9 @@ runs:
 
         echo "/usr/lib/ccache" >> "$GITHUB_PATH"
 
+        echo "CCACHE_SLOPPINESS=file_mtime,file_ctime" >> "$GITHUB_ENV"
+        echo "CCACHE_COMPILERCHECK=content" >> "$GITHUB_ENV"
+
         ccacheDir="${GITHUB_WORKSPACE}/.ccache"
         test -d "$ccacheDir" || mkdir "$ccacheDir"
 

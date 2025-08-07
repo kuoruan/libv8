@@ -30,8 +30,10 @@ runs:
         brew install ccache
 
         echo "$(brew --prefix ccache)/libexec" >> "$GITHUB_PATH"
+
         echo "CCACHE_CPP2=yes" >> "$GITHUB_ENV"
-        echo "CCACHE_SLOPPINESS=time_macros" >> "$GITHUB_ENV"
+        echo "CCACHE_SLOPPINESS=file_mtime,file_ctime,time_macros" >> "$GITHUB_ENV"
+        echo "CCACHE_COMPILERCHECK=content" >> "$GITHUB_ENV"
 
         ccacheDir="${GITHUB_WORKSPACE}/.ccache"
         test -d "$ccacheDir" || mkdir "$ccacheDir"
