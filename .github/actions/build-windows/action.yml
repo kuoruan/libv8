@@ -38,11 +38,9 @@ runs:
         $devcmdArch = switch ($arch) {
           "x64"   { "amd64" }
           "x86"   { "amd64_x86" }
+          "arm"   { "amd64_arm" }
           "arm64" { "amd64_arm64" }
-          default {
-            Write-Error "Unsupported architecture: $arch"
-            exit 1
-          }
+          default { "$arch" }
         }
 
         Write-Output "DEVCMD_ARCH=$devcmdArch" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8 -Append
