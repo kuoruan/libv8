@@ -14,5 +14,4 @@ v8_use_external_startup_data=false
 symbol_level=0
 strip_debug_info=true
 dcheck_always_on=false
-use_custom_libcxx=false
 treat_warnings_as_errors=false
