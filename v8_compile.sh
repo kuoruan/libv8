@@ -59,8 +59,8 @@ cd "${dir}/v8"
 
 build_dir="./out.gn/${os}.${target_cpu}.release"
 
-if [ -d "$build_dir" ]; then
-  # Clean up previous build directory
+if [ -d "$build_dir" ] && [ "$CI" = "true" ]; then
+  echo "CI environment detected - cleaning previous build directory"
   rm -rf "$build_dir"
 fi
 

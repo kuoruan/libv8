@@ -62,8 +62,10 @@ pushd "%dir%\v8"
 set "buildDir=.\out.gn\%os%.%targetCpu%.release"
 
 if exist "%buildDir%" (
-  rem Clean up previous build directory
-  rmdir /s /q "%buildDir%"
+  if "%CI%"=="true" (
+    echo CI environment detected - cleaning previous build directory
+    rmdir /s /q "%buildDir%"
+  )
 )
 
 call gn gen "%buildDir%" --args="%gnArgs%"
