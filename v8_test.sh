@@ -28,7 +28,6 @@ fi
 # https://clang.llvm.org/docs/CrossCompilation.html#general-cross-compilation-options-in-clang
 if [ "$os" = "macOS" ]; then
   framework_flags="-framework Foundation"
-  linker_flags=""  # macOS uses system default linker (ld64)
 
   case "$target_cpu" in
     x64)
@@ -43,7 +42,6 @@ if [ "$os" = "macOS" ]; then
   esac
 else
   framework_flags=""
-  linker_flags="-fuse-ld=lld"  # Use LLD on Linux and other platforms
 
   case "$target_cpu" in
     x64)
@@ -72,7 +70,7 @@ echo "Building hello world for architecture: $target_cpu"
     -std=c++20 \
     -fno-rtti \
     -pthread \
-    $linker_flags \
+    -fuse-ld=lld \
     -DV8_COMPRESS_POINTERS=1 \
     -DV8_ENABLE_SANDBOX \
     -I"${dir}/v8" \
@@ -80,9 +78,9 @@ echo "Building hello world for architecture: $target_cpu"
     "${dir}/v8/samples/hello-world.cc" \
     -o hello_world \
     -L"${build_dir}/obj/" \
-    -lv8_monolith \
     -lv8_libbase \
     -lv8_libplatform \
+    -lv8_monolith \
     -ldl \
     $framework_flags \
     $target_flags
