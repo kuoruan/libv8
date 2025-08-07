@@ -60,7 +60,7 @@ call cl.exe ^
   /I"%dir%\v8" ^
   /I"%dir%\v8\include" ^
   "%dir%\v8\samples\hello-world.cc" ^
-  /Fe".\hello-world" ^
+  /Fe".\hello_world" ^
   /link ^
   %linkFlags% ^
   "%buildDir%\obj\v8_monolith.lib" ^
@@ -80,13 +80,13 @@ if not "%targetCpu%"=="%currentCpu%" (
   exit /b 0
 )
 
-set binPath="%dir%\hello-world.exe"
+set binPath="%dir%\hello_world.exe"
 
 if exist "%binPath%" (
   echo Compilation successful, running test...
   call "%binPath%"
 ) else (
-  echo hello-world executable not found
+  echo hello_world executable not found
   exit /b 1
 )
 

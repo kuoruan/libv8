@@ -100,6 +100,6 @@ if [ -x "$bin_path" ]; then
   echo "Compilation successful, running test..."
   "$bin_path"
 else
-  echo "Compilation failed"
+  echo "hello_world executable not found"
   exit 1
 fi
