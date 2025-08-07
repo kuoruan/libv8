@@ -30,7 +30,22 @@ runs:
         $sccacheDir = "$Env:GITHUB_WORKSPACE`\.sccache"
         New-Item -Path "$sccacheDir" -ItemType Directory -Force
 
-        Write-Output "SCCACHE_DIR=$sccacheDir" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8
+        Write-Output "SCCACHE_DIR=$sccacheDir" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8 -Append
+
+        $arch = "${{ inputs.arch }}"
+
+        # Map architecture names to MSVC Developer Command Prompt architecture values
+        $devcmdArch = switch ($arch) {
+          "x64"   { "amd64" }
+          "x86"   { "amd64_x86" }
+          "arm64" { "amd64_arm64" }
+          default {
+            Write-Error "Unsupported architecture: $arch"
+            exit 1
+          }
+        }
+
+        Write-Output "DEVCMD_ARCH=$devcmdArch" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8 -Append
 
     - name: Download V8 Source
       shell: cmd
@@ -46,6 +61,8 @@ runs:
 
     - name: Setup Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ env.DEVCMD_ARCH }}
 
     - name: Test V8
       shell: cmd
