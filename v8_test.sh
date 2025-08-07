@@ -23,6 +23,13 @@ fi
 
 os="$(sh "${dir}/scripts/get_os.sh")"
 
+build_dir="${dir}/v8/out.gen/${os}.${target_cpu}.release"
+
+if [ ! -d "$build_dir" ]; then
+  echo "Build directory not found: $build_dir"
+  exit 1
+fi
+
 # Add frameworks and linker settings
 if [ "$os" = "macOS" ]; then
   macos_frameworks="-framework Foundation"
@@ -47,7 +54,7 @@ echo "Testing V8 for architecture: $target_cpu"
     -I"${dir}/v8/include" \
     "${dir}/v8/samples/hello-world.cc" \
     -o hello_world \
-    -L"${dir}/v8/out/release/obj/" \
+    -L"${build_dir}/obj/" \
     -lv8_monolith \
     -lv8_libbase \
     -lv8_libplatform \

@@ -23,6 +23,19 @@ if not "%targetCpu%"=="%currentCpu%" (
   exit /b 0
 )
 
+for /F "delims=" %%i in ('call "%dir%\scripts\get_os.bat"') do (
+  set "os=%%i"
+)
+
+set "buildDir=%dir%\v8\out.gen\%os%.%targetCpu%.release"
+
+if not exist "%buildDir%" (
+  echo Build directory not found: %buildDir%
+  exit /b 1
+)
+
+echo Testing V8 for architecture: %targetCpu%
+
 call cl.exe ^
   /EHsc ^
   /std:c++20 ^
@@ -34,7 +47,7 @@ call cl.exe ^
   "%dir%\v8\samples\hello-world.cc" ^
   /Fe".\hello-world" ^
   /link ^
-  "%dir%\v8\out\release\obj\v8_monolith.lib" ^
+  "%buildDir%\obj\v8_monolith.lib" ^
   /DEFAULTLIB:Advapi32.lib ^
   /DEFAULTLIB:Dbghelp.lib ^
   /DEFAULTLIB:Winmm.lib
