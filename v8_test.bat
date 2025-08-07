@@ -48,6 +48,8 @@ if /I "%targetCpu%"=="x64" (
 
 echo Building hello world for architecture: %targetCpu%
 
+@echo on
+
 call cl.exe ^
   /EHsc ^
   /std:c++20 ^
@@ -68,6 +70,8 @@ call cl.exe ^
   /DEFAULTLIB:Dbghelp.lib ^
   /DEFAULTLIB:Winmm.lib ^
   /SUBSYSTEM:CONSOLE
+
+@echo off
 
 if errorlevel 1 (
   echo Compilation failed
