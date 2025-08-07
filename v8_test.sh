@@ -67,21 +67,20 @@ echo "Building hello world for architecture: $target_cpu"
 (
   set -x
   clang++ \
-    -std=c++20 \
-    -fno-rtti \
-    -pthread \
-    -fuse-ld=lld \
-    -DV8_COMPRESS_POINTERS=1 \
-    -DV8_ENABLE_SANDBOX \
     -I"${dir}/v8" \
     -I"${dir}/v8/include" \
     "${dir}/v8/samples/hello-world.cc" \
     -o hello_world \
-    -L"${build_dir}/obj/" \
+    -fno-rtti \
+    -fuse-ld=lld \
+    -lv8_monolith \
     -lv8_libbase \
     -lv8_libplatform \
-    -lv8_monolith \
-    -ldl \
+    -L"${build_dir}/obj/" \
+    -pthread \
+    -std=c++20 \
+    -DV8_COMPRESS_POINTERS=1 \
+    -DV8_ENABLE_SANDBOX \
     $framework_flags \
     $target_flags
 )

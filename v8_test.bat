@@ -56,13 +56,13 @@ call cl.exe ^
   /Zc:__cplusplus ^
   /O2 ^
   /DNDEBUG ^
-  %archFlags% ^
   /DV8_COMPRESS_POINTERS=1 ^
   /DV8_ENABLE_SANDBOX ^
+  %archFlags% ^
   /I"%dir%\v8" ^
   /I"%dir%\v8\include" ^
-  "%dir%\v8\samples\hello-world.cc" ^
   /Fe".\hello_world" ^
+  "%dir%\v8\samples\hello-world.cc" ^
   /link ^
   %linkFlags% ^
   "%buildDir%\obj\v8_monolith.lib" ^
