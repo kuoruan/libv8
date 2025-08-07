@@ -23,22 +23,44 @@ fi
 
 os="$(sh "${dir}/scripts/get_os.sh")"
 
-# Add macOS-specific frameworks
+# Add frameworks and linker settings
 if [ "$os" = "macOS" ]; then
   macos_frameworks="-framework Foundation"
+  linker_flags=""  # macOS uses system default linker (ld64)
 else
   macos_frameworks=""
+  linker_flags="-fuse-ld=lld"  # Use LLD on Linux and other platforms
 fi
 
 echo "Testing V8 for architecture: $target_cpu"
 
 (
   set -x
-  clang++ -I"${dir}/v8" -I"${dir}/v8/include" \
-    "${dir}/v8/samples/hello-world.cc" -o hello_world -fno-rtti \
-    -lv8_monolith -ldl -L"${dir}/v8/out/release/obj/" \
-    -pthread -std=c++20 $macos_frameworks \
-    -DV8_COMPRESS_POINTERS=1 -DV8_ENABLE_SANDBOX
+  g++ \
+    -std=c++20 \
+    -fno-rtti \
+    -pthread \
+    $linker_flags \
+    -DV8_COMPRESS_POINTERS=1 \
+    -DV8_ENABLE_SANDBOX \
+    -I"${dir}/v8" \
+    -I"${dir}/v8/include" \
+    "${dir}/v8/samples/hello-world.cc" \
+    -o hello_world \
+    -L"${dir}/v8/out/release/obj/" \
+    -lv8_monolith \
+    -lv8_libbase \
+    -lv8_libplatform \
+    -ldl \
+    $macos_frameworks
 )
 
-sh -c ./hello_world
+bin_path="${dir}/hello_world"
+
+if [ -x "$bin_path" ]; then
+  echo "Compilation successful, running test..."
+  "$bin_path"
+else
+  echo "Compilation failed"
+  exit 1
+fi
