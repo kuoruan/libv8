@@ -45,6 +45,11 @@ runs:
 
         Write-Output "DEVCMD_ARCH=$devcmdArch" | Out-File -FilePath "$Env:GITHUB_ENV" -Encoding utf8 -Append
 
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ env.DEVCMD_ARCH }}
+
     - name: Download V8 Source
       shell: cmd
       run: .\v8_download.bat
@@ -56,11 +61,6 @@ runs:
     - name: Show SCCache Status
       shell: pwsh
       run: sccache --show-stats
-
-    - name: Setup Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: ${{ env.DEVCMD_ARCH }}
 
     - name: Test V8
       shell: cmd
