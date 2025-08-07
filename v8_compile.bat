@@ -61,6 +61,11 @@ pushd "%dir%\v8"
 
 set buildDir=".\out.gen\%os%.%targetCpu%.release"
 
+if exist "%buildDir%" (
+  rem Clean up previous build directory
+  rmdir /s /q "%buildDir%"
+)
+
 call gn gen "%buildDir%" --args="%gnArgs%"
 if errorlevel 1 (
   echo Failed to generate build files.

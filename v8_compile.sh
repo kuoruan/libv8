@@ -59,6 +59,11 @@ cd "${dir}/v8"
 
 build_dir="./out.gen/${os}.${target_cpu}.release"
 
+if [ -d "$build_dir" ]; then
+  # Clean up previous build directory
+  rm -rf "$build_dir"
+fi
+
 gn gen "$build_dir" --args="$gn_args"
 
 echo "==================== Build args start ===================="
