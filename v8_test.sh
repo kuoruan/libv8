@@ -43,7 +43,7 @@ echo "Testing V8 for architecture: $target_cpu"
 
 (
   set -x
-  g++ \
+  clang++ \
     -std=c++20 \
     -fno-rtti \
     -pthread \
