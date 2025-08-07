@@ -18,11 +18,6 @@ if "%targetCpu%"=="" (
   set "targetCpu=%currentCpu%"
 )
 
-if not "%targetCpu%"=="%currentCpu%" (
-  echo Skipping test for architecture: %targetCpu% ^(current: %currentCpu%^)
-  exit /b 0
-)
-
 for /F "delims=" %%i in ('call "%dir%\scripts\get_os.bat"') do (
   set "os=%%i"
 )
@@ -34,12 +29,32 @@ if not exist "%buildDir%" (
   exit /b 1
 )
 
-echo Testing V8 for architecture: %targetCpu%
+set "archFlags="
+set "linkFlags="
+
+if /I "%targetCpu%"=="x64" (
+  set "archFlags=/favor:AMD64"
+  set "linkFlags=/MACHINE:X64"
+) else if /I "%targetCpu%"=="x86" (
+  set "archFlags=/favor:INTEL64"
+  set "linkFlags=/MACHINE:X86"
+) else if /I "%targetCpu%"=="arm64" (
+  set "archFlags="
+  set "linkFlags=/MACHINE:ARM64"
+) else if /I "%targetCpu%"=="arm" (
+  set "archFlags="
+  set "linkFlags=/MACHINE:ARM"
+)
+
+echo Building hello world for architecture: %targetCpu%
 
 call cl.exe ^
   /EHsc ^
   /std:c++20 ^
   /Zc:__cplusplus ^
+  /O2 ^
+  /DNDEBUG ^
+  %archFlags% ^
   /DV8_COMPRESS_POINTERS=1 ^
   /DV8_ENABLE_SANDBOX ^
   /I"%dir%\v8" ^
@@ -47,14 +62,22 @@ call cl.exe ^
   "%dir%\v8\samples\hello-world.cc" ^
   /Fe".\hello-world" ^
   /link ^
+  %linkFlags% ^
   "%buildDir%\obj\v8_monolith.lib" ^
   /DEFAULTLIB:Advapi32.lib ^
   /DEFAULTLIB:Dbghelp.lib ^
-  /DEFAULTLIB:Winmm.lib
+  /DEFAULTLIB:Winmm.lib ^
+  /SUBSYSTEM:CONSOLE
 
 if errorlevel 1 (
   echo Compilation failed
   exit /b %errorlevel%
+)
+
+if not "%targetCpu%"=="%currentCpu%" (
+  echo Cross-compilation successful for %targetCpu%
+  echo Skipping run test for architecture: %targetCpu% ^(current: %currentCpu%^)
+  exit /b 0
 )
 
 set binPath="%dir%\hello-world.exe"

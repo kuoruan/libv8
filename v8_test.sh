@@ -16,11 +16,6 @@ if [ -z "$target_cpu" ]; then
   target_cpu="$current_cpu"
 fi
 
-if [ "$target_cpu" != "$current_cpu" ]; then
-  echo "Skipping test for architecture: $target_cpu (current: $current_cpu)"
-  exit 0
-fi
-
 os="$(sh "${dir}/scripts/get_os.sh")"
 
 build_dir="${dir}/v8/out.gen/${os}.${target_cpu}.release"
@@ -30,16 +25,46 @@ if [ ! -d "$build_dir" ]; then
   exit 1
 fi
 
-# Add frameworks and linker settings
+# https://clang.llvm.org/docs/CrossCompilation.html#general-cross-compilation-options-in-clang
 if [ "$os" = "macOS" ]; then
-  macos_frameworks="-framework Foundation"
+  framework_flags="-framework Foundation"
   linker_flags=""  # macOS uses system default linker (ld64)
+
+  case "$target_cpu" in
+    x64)
+      target_flags="--target=x86_64-apple-darwin"
+      ;;
+    arm64)
+      target_flags="--target=arm64-apple-darwin"
+      ;;
+    *)
+      target_flags=""
+      ;;
+  esac
 else
-  macos_frameworks=""
+  framework_flags=""
   linker_flags="-fuse-ld=lld"  # Use LLD on Linux and other platforms
+
+  case "$target_cpu" in
+    x64)
+      target_flags="--target=x86_64-linux-gnu"
+      ;;
+    x86)
+      target_flags="--target=i386-linux-gnu"
+      ;;
+    arm)
+      target_flags="--target=arm-linux-gnueabihf"
+      ;;
+    arm64)
+      target_flags="--target=aarch64-linux-gnu"
+      ;;
+    *)
+      target_flags=""
+      ;;
+  esac
 fi
 
-echo "Testing V8 for architecture: $target_cpu"
+echo "Building hello world for architecture: $target_cpu"
 
 (
   set -x
@@ -59,8 +84,15 @@ echo "Testing V8 for architecture: $target_cpu"
     -lv8_libbase \
     -lv8_libplatform \
     -ldl \
-    $macos_frameworks
+    $framework_flags \
+    $target_flags
 )
+
+if [ "$target_cpu" != "$current_cpu" ]; then
+  echo "Cross-compilation successful for $target_cpu"
+  echo "Skipping run test for architecture: $target_cpu (current: $current_cpu)"
+  exit 0
+fi
 
 bin_path="${dir}/hello_world"
 
