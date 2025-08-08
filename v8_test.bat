@@ -32,20 +32,17 @@ if not exist "%buildDir%" (
   exit /b 1
 )
 
-set "archFlags="
-set "linkFlags="
-
 if /I "%targetCpu%"=="x64" (
-  set "archFlags=/favor:AMD64"
+  set "defFlags=/DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX"
   set "linkFlags=/MACHINE:X64"
 ) else if /I "%targetCpu%"=="x86" (
-  set "archFlags=/favor:INTEL64"
+  set "defFlags="
   set "linkFlags=/MACHINE:X86"
 ) else if /I "%targetCpu%"=="arm64" (
-  set "archFlags="
+  set "defFlags=/DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX"
   set "linkFlags=/MACHINE:ARM64"
 ) else if /I "%targetCpu%"=="arm" (
-  set "archFlags="
+  set "defFlags="
   set "linkFlags=/MACHINE:ARM"
 )
 
@@ -59,9 +56,7 @@ call cl.exe ^
   /Zc:__cplusplus ^
   /O2 ^
   /DNDEBUG ^
-  /DV8_COMPRESS_POINTERS=1 ^
-  /DV8_ENABLE_SANDBOX ^
-  %archFlags% ^
+  %defFlags% ^
   /I"%dir%\v8" ^
   /I"%dir%\v8\include" ^
   /Fe".\hello_world" ^

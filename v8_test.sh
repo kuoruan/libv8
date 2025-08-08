@@ -31,12 +31,15 @@ if [ "$os" = "macOS" ]; then
 
   case "$target_cpu" in
     x64)
+      def_flags="-DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
       target_flags="--target=x86_64-apple-darwin"
       ;;
     arm64)
+      def_flags="-DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
       target_flags="--target=arm64-apple-darwin"
       ;;
     *)
+      def_flags=""
       target_flags=""
       ;;
   esac
@@ -45,18 +48,23 @@ else
 
   case "$target_cpu" in
     x64)
+      def_flags="-DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
       target_flags="--target=x86_64-linux-gnu"
       ;;
     x86)
+      def_flags=""
       target_flags="--target=i386-linux-gnu"
       ;;
-    arm)
-      target_flags="--target=arm-linux-gnueabihf"
-      ;;
     arm64)
+      def_flags="-DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
       target_flags="--target=aarch64-linux-gnu"
       ;;
+    arm)
+      def_flags=""
+      target_flags="--target=arm-linux-gnueabihf"
+      ;;
     *)
+      def_flags=""
       target_flags=""
       ;;
   esac
@@ -79,8 +87,7 @@ echo "Building hello world for architecture: $target_cpu"
     -L"${build_dir}/obj/" \
     -pthread \
     -std=c++20 \
-    -DV8_COMPRESS_POINTERS=1 \
-    -DV8_ENABLE_SANDBOX \
+    $def_flags \
     $framework_flags \
     $target_flags
 )

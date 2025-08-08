@@ -11,7 +11,7 @@ if [ -z "$arch" ]; then
   arch="$current_arch"
 fi
 
-if [ "$arch" == "$current_arch" ]; then
+if [ "$arch" = "$current_arch" ]; then
   echo "Ignoring installation for current architecture: $arch"
   exit 0
 fi
@@ -20,7 +20,7 @@ deps=""
 
 case "$arch" in
   x86)
-    deps="libc6-dev-i386"
+    deps="libc6-dev-i386 g++-multilib"
     ;;
   x64)
     ;;
