@@ -50,10 +50,15 @@ if command -v ccache >/dev/null 2>&1 ; then
   cc_wrapper="ccache"
 fi
 
-gn_args="$(grep -v '^#\|^$' "${dir}/args/${os}.gn" | tr -d '\r' | tr '\n' ' ')"
-gn_args="${gn_args}cc_wrapper=\"$cc_wrapper\""
-gn_args="${gn_args} target_cpu=\"$target_cpu\""
-gn_args="${gn_args} v8_target_cpu=\"$target_cpu\""
+gn_args_file="${dir}/args_${os}.gn"
+
+# Create or clear the args file
+echo -n > "$gn_args_file"
+
+grep -v '^#\|^$' "${dir}/args/${os}.gn" >> "$gn_args_file"
+echo "cc_wrapper = \"$cc_wrapper\"" >> "$gn_args_file"
+echo "target_cpu = \"$target_cpu\"" >> "$gn_args_file"
+echo "v8_target_cpu = \"$target_cpu\"" >> "$gn_args_file"
 
 cd "${dir}/v8"
 
@@ -64,10 +69,10 @@ if [ -d "$build_dir" ] && [ "$CI" = "true" ]; then
   rm -rf "$build_dir"
 fi
 
-gn gen "$build_dir" --args="$gn_args"
+gn gen "$build_dir" --args-file="$gn_args_file"
 
 echo "==================== Build args start ===================="
-gn args "$build_dir" --list | tee "${dir}/gn-args_${os}.txt"
+gn args "$build_dir" --list | tee "${dir}/args_${os}.txt"
 echo "==================== Build args end ===================="
 
 (

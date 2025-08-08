@@ -39,16 +39,6 @@ if "%targetCpu%"=="" (
 
 echo Building V8 for %os% %targetCpu%
 
-setlocal EnableDelayedExpansion
-
-set "args="
-
-for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
-  set "args=!args!%%i "
-)
-
-endlocal & set "gnArgs=%args%"
-
 set "ccWrapper="
 
 where sccache >nul 2>nul
@@ -56,9 +46,18 @@ if not errorlevel 1 (
   set "ccWrapper=sccache"
 )
 
-set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"""
-set "gnArgs=%gnArgs% target_cpu=""%targetCpu%"""
-set "gnArgs=%gnArgs% v8_target_cpu=""%targetCpu%"""
+set "genArgsFile=%dir%\args_%os%.gn"
+
+rem Create or clear the args file
+type nul > "%genArgsFile%"
+
+for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
+  echo %%i >> "%genArgsFile%"
+)
+
+echo cc_wrapper = "%ccWrapper%" >> "%genArgsFile%"
+echo target_cpu = "%targetCpu%" >> "%genArgsFile%"
+echo v8_target_cpu = "%targetCpu%" >> "%genArgsFile%"
 
 pushd "%dir%\v8"
 
@@ -71,15 +70,15 @@ if exist "%buildDir%" (
   )
 )
 
-call gn gen "%buildDir%" --args="%gnArgs%"
+call gn gen "%buildDir%" --args-file="%genArgsFile%"
 if errorlevel 1 (
   echo Failed to generate build files.
   exit /b %errorlevel%
 )
 
 echo ==================== Build args start ====================
-call gn args "%buildDir%" --list > "%dir%\gn-args_%os%.txt"
-type "%dir%\gn-args_%os%.txt"
+call gn args "%buildDir%" --list > "%dir%\args_%os%.txt"
+type "%dir%\args_%os%.txt"
 echo ==================== Build args end ====================
 
 call ninja -C "%buildDir%" -j %NUMBER_OF_PROCESSORS% v8_monolith
