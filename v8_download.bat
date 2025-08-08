@@ -3,6 +3,9 @@
 setlocal
 
 set "dir=%~dp0"
+rem Remove trailing backslash
+set "dir=%dir:~0,-1%"
+
 set "branch=%~1"
 
 set "depotToolsDir=%dir%\depot_tools"

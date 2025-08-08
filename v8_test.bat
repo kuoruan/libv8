@@ -3,6 +3,9 @@
 setlocal
 
 set "dir=%~dp0"
+rem Remove trailing backslash
+set "dir=%dir:~0,-1%"
+
 set "targetCpu=%~1"
 
 if not exist "%dir%\v8" (
