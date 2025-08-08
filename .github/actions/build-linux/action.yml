@@ -15,9 +15,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: .ccache
-        key: ${{ runner.os }}-${{ inputs.arch }}:libv8:ccache:${{ github.run_number }}
-        restore-keys: |
-          ${{ runner.os }}-${{ inputs.arch }}:libv8:ccache:
+        key: ${{ runner.os }}-${{ inputs.arch }}:libv8:ccache
 
     - name: Setup Python
       uses: actions/setup-python@v5
