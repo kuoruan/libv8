@@ -54,16 +54,16 @@ call cl.exe ^
   /EHsc ^
   /std:c++20 ^
   /Zc:__cplusplus ^
-  /O2 ^
-  /DNDEBUG ^
   %defFlags% ^
   /I"%dir%\v8" ^
   /I"%dir%\v8\include" ^
-  /Fe".\hello_world" ^
+  /GR- ^
+  /out:".\hello_world.exe" ^
   "%dir%\v8\samples\hello-world.cc" ^
+  v8_monolith.lib ^
   /link ^
   %linkFlags% ^
-  "%buildDir%\obj\v8_monolith.lib" ^
+  /LIBPATH:"%buildDir%\obj\" ^
   /DEFAULTLIB:Advapi32.lib ^
   /DEFAULTLIB:Dbghelp.lib ^
   /DEFAULTLIB:Winmm.lib ^
