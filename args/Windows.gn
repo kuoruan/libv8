@@ -12,7 +12,7 @@ v8_enable_temporal_support = false
 v8_use_external_startup_data = false
 clang_use_chrome_plugins = false
 
-symbol_level=1
+symbol_level = 1
 strip_debug_info = true
 dcheck_always_on = false
 treat_warnings_as_errors = false

@@ -34,7 +34,7 @@ mkdir "$output_dir" || true
 
 cp -r "${dir}/v8/include" \
   "${build_dir}/obj/libv8_monolith.a" \
-  "${dir}/args_${os}.gn" \
+  "${build_dir}/args.gn" \
   "${dir}/args_${os}.txt" \
   "$output_dir"
 

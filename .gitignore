@@ -2,8 +2,7 @@
 .gclient_entries
 .gclient_previous_sync_commits
 .gcs_entries
-gn_args.txt
-gn-args_*.txt
+args_*.txt
 v8
 
 *.a

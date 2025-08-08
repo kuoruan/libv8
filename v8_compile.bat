@@ -46,18 +46,49 @@ if not errorlevel 1 (
   set "ccWrapper=sccache"
 )
 
-set "genArgsFile=%dir%\args_%os%.gn"
+setlocal EnableDelayedExpansion
 
-rem Create or clear the args file
-type nul > "%genArgsFile%"
+set "args="
 
-for /F "usebackq eol=# tokens=*" %%i in ("%dir%\args\%os%.gn") do (
-  echo %%i >> "%genArgsFile%"
+rem Ignore comments and empty lines, split key=value pairs
+for /F "usebackq eol=# tokens=1,* delims==" %%a in ("%dir%\args\%os%.gn") do (
+  set "key=%%a"
+  set "value=%%b"
+
+  rem Remove trailing spaces and tabs
+  for /L %%x in (1,1,10) do (
+    if "!key:~-1!"==" " (
+      set "key=!key:~0,-1!"
+    )
+
+    if "!key:~-1!"=="	" (
+      set "key=!key:~0,-1!"
+    )
+  )
+
+  if "!value!"=="" (
+    set "args=!args!!key! "
+  ) else (
+    rem Remove leading spaces and tabs
+    for /L %%x in (1,1,10) do (
+      if "!value:~0,1!"==" " (
+        set "value=!value:~1!"
+      )
+
+      if "!value:~0,1!"=="	" (
+        set "value=!value:~1!"
+      )
+    )
+
+    set "args=!args!!key!=!value! "
+  )
 )
 
-echo cc_wrapper = "%ccWrapper%" >> "%genArgsFile%"
-echo target_cpu = "%targetCpu%" >> "%genArgsFile%"
-echo v8_target_cpu = "%targetCpu%" >> "%genArgsFile%"
+endlocal & set "gnArgs=%args%"
+
+set "gnArgs=%gnArgs%cc_wrapper=""%ccWrapper%"""
+set "gnArgs=%gnArgs% target_cpu=""%targetCpu%"""
+set "gnArgs=%gnArgs% v8_target_cpu=""%targetCpu%"""
 
 pushd "%dir%\v8"
 
@@ -70,7 +101,7 @@ if exist "%buildDir%" (
   )
 )
 
-call gn gen "%buildDir%" --args-file="%genArgsFile%"
+call gn gen "%buildDir%" --args="%gnArgs%"
 if errorlevel 1 (
   echo Failed to generate build files.
   exit /b %errorlevel%
