@@ -53,6 +53,10 @@ runs:
       shell: bash
       run: ccache -s
 
+    - name: Install Dependencies
+      shell: bash
+      run: ./install_deps.sh ${{ inputs.arch }}
+
     - name: Test V8
       shell: bash
       run: ./v8_test.sh ${{ inputs.arch }}
