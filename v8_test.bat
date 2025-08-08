@@ -51,23 +51,24 @@ echo Building hello world for architecture: %targetCpu%
 @echo on
 
 call cl.exe ^
+  /nologo ^
   /EHsc ^
+  /GR- ^
   /std:c++20 ^
   /Zc:__cplusplus ^
   %defFlags% ^
   /I"%dir%\v8" ^
   /I"%dir%\v8\include" ^
-  /GR- ^
-  /out:".\hello_world.exe" ^
   "%dir%\v8\samples\hello-world.cc" ^
   v8_monolith.lib ^
   /link ^
+  /SUBSYSTEM:CONSOLE ^
   %linkFlags% ^
   /LIBPATH:"%buildDir%\obj\" ^
   /DEFAULTLIB:Advapi32.lib ^
   /DEFAULTLIB:Dbghelp.lib ^
   /DEFAULTLIB:Winmm.lib ^
-  /SUBSYSTEM:CONSOLE
+  /OUT:".\hello_world.exe"
 
 @echo off
 
