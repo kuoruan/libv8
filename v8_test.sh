@@ -87,6 +87,7 @@ echo "Building hello world for architecture: $target_cpu"
     -L"${build_dir}/obj/" \
     -pthread \
     -std=c++20 \
+    -stdlib=libstdc++ \
     $def_flags \
     $framework_flags \
     $target_flags
